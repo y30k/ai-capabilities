@@ -1,0 +1,4 @@
+interface:
+  display_name: "Implement PRD Stories"
+  short_description: "Code approved PRDs story by story"
+  default_prompt: "Use $implement-prd-stories to implement this approved PRD one verified story at a time."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Review Pull Request"
+  short_description: "Adaptive, comprehensive, or maintainer PR review"
+  default_prompt: "Use $review-pull-request to review this pull request with the right depth and validation path."

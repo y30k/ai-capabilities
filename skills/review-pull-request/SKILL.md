@@ -1,0 +1,19 @@
+---
+name: review-pull-request
+description: |
+  Review pull requests with multiple paths: smart/adaptive review, comprehensive review, maintainer decision review, validation on main versus feature branch, and optional safe fix implementation. Use when the user asks to review a PR, validate a PR, check a pull request, synthesize review findings, or decide whether a PR is ready to merge.
+---
+
+# Review Pull Request
+
+Use this skill for PR review and validation. It consolidates smart, comprehensive, maintainer, and validation-focused PR workflows.
+
+## Mode Selection
+
+Read `references/workflow.md`, then choose:
+
+- **smart**: adaptive review; only run lanes warranted by risk.
+- **comprehensive**: run all review lanes and synthesize findings.
+- **maintainer**: review against project direction and make approve/request-changes/comment recommendation.
+- **validation**: compare main/base vs feature behavior, including tests or reproduction.
+- **fix-review-findings**: implement safe fixes after review if requested.

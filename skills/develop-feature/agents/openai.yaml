@@ -1,0 +1,4 @@
+interface:
+  display_name: "Develop Feature"
+  short_description: "Plan-gated feature implementation"
+  default_prompt: "Use $develop-feature to implement this approved feature plan with validation."

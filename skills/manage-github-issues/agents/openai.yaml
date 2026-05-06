@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage GitHub Issues"
+  short_description: "Create, dedupe, and triage issues"
+  default_prompt: "Use $manage-github-issues to create or triage GitHub issues for this repository."

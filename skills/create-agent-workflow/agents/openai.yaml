@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Agent Workflow"
+  short_description: "Design reusable agent workflows"
+  default_prompt: "Use $create-agent-workflow to design a reusable multi-step workflow for this project."

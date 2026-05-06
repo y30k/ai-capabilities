@@ -1,0 +1,25 @@
+# Local coding-agent state and project-local development skills
+.pi/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Python/cache artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node/cache artifacts
+node_modules/
+.npm/
+.yarn/
+.pnpm-store/
+
+# Build/log output
+dist/
+build/
+coverage/
+*.log

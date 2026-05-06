@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Smoke Test"
+  short_description: "Portable coding-agent capability checks"
+  default_prompt: "Use $agent-smoke-test to check what this coding agent can reliably do in this project."

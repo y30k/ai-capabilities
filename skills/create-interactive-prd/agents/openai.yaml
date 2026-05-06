@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Interactive PRD"
+  short_description: "Guided problem-first PRD creation"
+  default_prompt: "Use $create-interactive-prd to turn this feature idea into an evidence-backed PRD."

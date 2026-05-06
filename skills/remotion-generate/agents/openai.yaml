@@ -1,0 +1,4 @@
+interface:
+  display_name: "Remotion Generate"
+  short_description: "Generate Remotion video compositions"
+  default_prompt: "Use $remotion-generate to create or modify this Remotion video composition."

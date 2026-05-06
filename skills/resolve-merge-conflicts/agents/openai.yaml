@@ -1,0 +1,4 @@
+interface:
+  display_name: "Resolve Merge Conflicts"
+  short_description: "Resolve PR merge conflicts safely"
+  default_prompt: "Use $resolve-merge-conflicts to resolve these merge conflicts while preserving both branches intent."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Improve Code Health"
+  short_description: "Architecture sweep and safe refactoring"
+  default_prompt: "Use $improve-code-health to simplify this codebase safely while preserving behavior."
