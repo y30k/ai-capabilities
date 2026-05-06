@@ -9,3 +9,7 @@ description: |
 Use this skill for issue creation and triage. Use `fix-github-issue` when the user wants code changes.
 
 Read `references/workflow.md` and choose **create issue** or **triage backlog**.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/manage-github-issues/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

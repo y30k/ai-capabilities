@@ -171,3 +171,7 @@ By the end:
 - "Review the staged diff file by file, fix any P0/P1/P2 issues, stage the fixes, and run all required gates."
 - "Treat this as a release candidate and fail closed until the repo's mandatory checks and performance baselines are satisfied."
 - "Get this branch truly production-ready, not just test-green."
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/check-production-readiness/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

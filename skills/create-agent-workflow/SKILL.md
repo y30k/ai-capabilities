@@ -15,3 +15,7 @@ Use this skill to turn a recurring agent task into a reusable workflow that any 
 3. Design phases with explicit artifacts and gates.
 4. Prefer deterministic commands/scripts for checks and parsing; use AI reasoning for investigation, synthesis, and judgment.
 5. Save the workflow where the user wants it, or provide it inline if no target format exists.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/create-agent-workflow/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

@@ -9,3 +9,7 @@ description: |
 Use this skill for release preparation and execution. Releases can affect users and external systems, so preserve approval gates.
 
 Read `references/workflow.md` before changing versions, tags, branches, or published artifacts.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/release/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

@@ -22,3 +22,7 @@ Default to **standard**. Use **smoke-first** for bugs, regressions, or unclear r
 ## Planning Gate
 
 Investigation, planning, and validation-only modes must not edit source code. For coding modes, present the fix plan and wait for user approval before implementation unless the user has explicitly pre-authorized end-to-end fixing.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/fix-github-issue/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

@@ -29,3 +29,7 @@ Read `references/workflow.md`, then choose the smallest useful path:
 ## Core Rule
 
 Do not skip gates or validation. At minimum run relevant tests or explain why they cannot run.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/develop-feature/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
