@@ -29,7 +29,7 @@ Accept any agent name; reject malformed JSON.
 When tools are available:
 
 - Read a harmless project file or list the repository root.
-- Create `.agents/smoke-test/probe.txt` with a timestamp and read it back.
+- Create `docs/agent-smoke-test/probe.txt` with a timestamp and read it back.
 - Run a harmless command such as `pwd` or the platform equivalent.
 - Delete only scratch files created by the smoke test if cleanup is requested.
 

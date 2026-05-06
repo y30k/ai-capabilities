@@ -15,6 +15,17 @@ skills/
 
 Local agent state and working skills under `.pi/` are intentionally ignored by git.
 
+## Generated Documentation Convention
+
+When a skill creates plans, PRDs, review reports, implementation notes, story tracking, standup briefs, readiness scratchpads, or other durable documentation, write it under the repository-root `docs/` directory. Do not use agent-specific state directories for generated documentation.
+
+Examples:
+
+- PRDs: `docs/prds/{feature}.prd.md`
+- Feature plans: `docs/develop-feature/{slug}/implementation-plan.md`
+- GitHub issue findings: `docs/github-issues/{issue}/findings.md`
+- PRD implementation tracking: `docs/prd-implementations/{prd-slug}/stories.md`
+
 ## Skill Groups
 
 ### Original skills

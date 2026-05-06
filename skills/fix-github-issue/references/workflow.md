@@ -27,7 +27,7 @@ Classify as bug, feature, enhancement, refactor, chore, documentation, or questi
 - Read actual files before making technical claims.
 - For bugs, identify expected vs actual behavior and likely root cause.
 - For features/enhancements, identify existing patterns to extend.
-- Capture findings under `.agents/artifacts/fix-github-issue/{issue}/` when useful.
+- Capture findings under `docs/github-issues/{issue}/` when useful.
 
 ## 5. Plan
 

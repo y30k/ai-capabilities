@@ -33,7 +33,7 @@ This is a **planning and requirements skill only**. It may read project files to
 Default PRD path:
 
 ```text
-.agents/PRDs/{kebab-case-feature-name}.prd.md
+docs/prds/{kebab-case-feature-name}.prd.md
 ```
 
 Create the directory before writing. Use a user-provided path if they specify one. Do not write PRDs into the skill directory.
@@ -159,3 +159,7 @@ Report:
 ### Recommended Next Step
 Review the PRD. After explicit approval, use `implement-prd-stories` or another coding skill to implement it.
 ```
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/create-interactive-prd/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

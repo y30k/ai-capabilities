@@ -9,3 +9,7 @@ description: |
 Use this skill to generate a concise maintainer briefing. It replaces model-specific standup variants with one portable workflow.
 
 Read `references/workflow.md`, gather available repository/GitHub context, and produce a prioritized digest.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/maintainer-standup/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

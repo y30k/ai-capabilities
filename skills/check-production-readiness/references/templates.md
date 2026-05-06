@@ -1,6 +1,6 @@
 # Readiness templates
 
-Use these as strict defaults and adapt to the actual repo and staged change set.
+Use these as strict defaults and adapt to the actual repo and staged change set. If you persist a readiness scratchpad or handoff document, write it under `docs/check-production-readiness/` in the repository root.
 
 ## Review scratchpad template
 

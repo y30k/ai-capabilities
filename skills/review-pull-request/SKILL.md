@@ -17,3 +17,7 @@ Read `references/workflow.md`, then choose:
 - **maintainer**: review against project direction and make approve/request-changes/comment recommendation.
 - **validation**: compare main/base vs feature behavior, including tests or reproduction.
 - **fix-review-findings**: implement safe fixes after review if requested.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/review-pull-request/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

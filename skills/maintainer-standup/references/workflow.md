@@ -43,4 +43,4 @@ Prioritize by urgency and maintainer leverage:
 - [ ] {highest leverage action}
 ```
 
-Optionally persist the brief under `.agents/maintainer-standup/briefs/` if the user wants history.
+Optionally persist the brief under `docs/maintainer-standup/briefs/` if the user wants history.

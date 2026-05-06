@@ -12,5 +12,9 @@ Use this skill to verify what the current coding agent can reliably do in a proj
 
 1. Ask what level to run if unclear: **quick** (chat only), **tools** (read/write/shell), or **workflow** (loop/gate/recovery behavior).
 2. Read `references/workflow.md`.
-3. Run only safe checks by default. Do not modify project source unless the user approves; write scratch files under `.agents/smoke-test/`.
+3. Run only safe checks by default. Do not modify project source unless the user approves; write scratch files under `docs/agent-smoke-test/`.
 4. Report capabilities, failures, and recommended guardrails for future tasks.
+
+## Documentation Output
+
+When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/agent-smoke-test/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.

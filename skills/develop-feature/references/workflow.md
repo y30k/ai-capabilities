@@ -4,7 +4,7 @@
 
 1. Clarify the input: approved idea, existing plan/spec, or app brief. If the input is an unreviewed PRD, route to `create-interactive-prd` for planning or `implement-prd-stories` after approval.
 2. Inspect the repository for stack, commands, patterns, tests, and contribution rules.
-3. Create `.agents/artifacts/develop-feature/{slug}/` for plans and validation notes when useful.
+3. Create `docs/develop-feature/{slug}/` for plans and validation notes when useful.
 4. Keep changes small and reversible.
 
 ## Planning Gate
