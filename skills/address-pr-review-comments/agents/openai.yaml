@@ -1,0 +1,4 @@
+interface:
+  display_name: "Address PR Review Comments"
+  short_description: "Fix PR review threads and reply"
+  default_prompt: "Use $address-pr-review-comments to resolve review threads on this PR, validate fixes, reply to reviewers, then push the update."

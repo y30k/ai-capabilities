@@ -2,7 +2,7 @@
 
 A project-local collection of reusable AI-agent skills. Each skill is a self-contained folder under `skills/` with a `SKILL.md` manifest and optional supporting references.
 
-The repository now organizes its skills around an **AI Development Life Cycle (AI-DLC)**: readiness, discovery/PRD, technical design, test strategy, work-item decomposition, board readiness, implementation, review, integration, production readiness, release, observation, and feedback.
+The repository now organizes its skills around an **AI Development Life Cycle (AI-DLC)**: readiness, discovery/PRD, technical design, test strategy, work-item decomposition, board readiness, implementation, review, review-comment remediation, integration, production readiness, release, observation, and feedback.
 
 See [`docs/ai-dlc.md`](docs/ai-dlc.md) for the full process, rationale, phase order, gates, and skill handoffs.
 
@@ -36,6 +36,7 @@ agent-smoke-test
 → manage-delivery-board
 → implement-prd-stories
 → review-pull-request
+→ address-pr-review-comments, if reviewers request changes
 → resolve-merge-conflicts, if needed
 → check-production-readiness
 → release
@@ -59,6 +60,7 @@ Examples:
 - Feature plans: `docs/develop-feature/{slug}/implementation-plan.md`
 - GitHub issue findings: `docs/github-issues/{issue}/findings.md`
 - PRD implementation tracking: `docs/implement-prd-stories/{story}.md`
+- PR review-response notes: `docs/address-pr-review-comments/{pr-number}.md`
 - Release observations: `docs/release-observations/{version-or-date}.md`
 - AI-DLC lifecycle plans: `docs/ai-dlc/{topic}.md`
 
@@ -70,6 +72,7 @@ These skills were created from scratch for this repository and related y30k/Cape
 
 Current repository-original skills:
 
+- `address-pr-review-comments` — address GitHub PR review comments end-to-end: fetch unresolved threads, implement approved fixes, validate, reply on original threads before pushing, commit, push, and summarize follow-up.
 - `check-production-readiness` — strict fail-closed release-candidate review for staged changes, including mandatory gate discovery, P0/P1/P2 fixes, performance readiness, baseline handling, and final READY/NOT READY verdict discipline.
 - `create-technical-design` — approved PRD/spec to implementation-ready technical design, ADRs, contracts, rollout/rollback, observability, and risks.
 - `create-test-strategy` — requirements/design/work items to acceptance, regression, integration, performance, security, accessibility, and release validation matrix.
@@ -110,6 +113,7 @@ Examples:
 - `create-prd-work-items` creates or updates tracker stories only after permission.
 - `manage-delivery-board` identifies the next unblocked work item.
 - `implement-prd-stories` starts after work-item approval and implements one validated slice at a time.
+- `address-pr-review-comments` replies on PR review threads, implements approved fixes, validates, commits, and pushes only with authorization.
 - `observe-release` verifies health and captures follow-up work after release; it should not rollback or mutate production without explicit authorization.
 
 ## Using These Skills
@@ -124,6 +128,7 @@ Recommended entry points:
 - Use `skills/create-interactive-prd/SKILL.md` for new product discovery and PRDs.
 - Use `skills/create-technical-design/SKILL.md`, `skills/create-test-strategy/SKILL.md`, and `skills/create-prd-work-items/SKILL.md` after PRD approval.
 - Use `skills/manage-delivery-board/SKILL.md` before implementation sessions that depend on GitHub Projects, GitHub Issues, or Jira.
+- Use `skills/address-pr-review-comments/SKILL.md` after PR reviewers leave requested changes or threaded feedback to address.
 - Use `skills/observe-release/SKILL.md` after release or deployment.
 
 ## Attribution
