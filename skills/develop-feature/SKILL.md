@@ -10,7 +10,7 @@ description: |
 
 # Develop Feature
 
-Use this coding skill for feature work from an approved idea, plan, spec, or app brief through validated implementation.
+Use this coding skill for feature work from an approved idea, plan, spec, or app brief through validated implementation. For approved PRDs that need durable story tracking, use `create-technical-design`, `create-test-strategy`, and `create-prd-work-items` before `implement-prd-stories`.
 
 ## Boundary
 
@@ -22,6 +22,7 @@ Read `references/workflow.md`, then choose the smallest useful path:
 
 - **idea-to-PR**: idea → lightweight implementation plan → approval gate → implementation → validation → PR.
 - **plan-to-PR**: existing approved plan/spec → implementation → validation → PR.
+- **PRD-to-tracked-delivery**: approved PRD → `create-technical-design` → `create-test-strategy` → `create-prd-work-items` → `manage-delivery-board` → `implement-prd-stories`.
 - **implement-only**: user explicitly asks to implement an already-understood plan without PR ceremony.
 - **guided PIV**: user wants human-in-the-loop plan, implementation, validation, feedback.
 - **adversarial build**: new app or large feature benefits from builder/reviewer repair loops.

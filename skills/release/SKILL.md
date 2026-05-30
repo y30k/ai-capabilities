@@ -8,7 +8,7 @@ description: |
 
 Use this skill for release preparation and execution. Releases can affect users and external systems, so preserve approval gates.
 
-Read `references/workflow.md` before changing versions, tags, branches, or published artifacts.
+Read `references/workflow.md` before changing versions, tags, branches, or published artifacts. After the release or deployment completes, use `observe-release` to verify rollout health and capture follow-up work.
 
 ## Documentation Output
 

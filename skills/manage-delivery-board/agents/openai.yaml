@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage Delivery Board"
+  short_description: "Prioritize unblocked delivery work"
+  default_prompt: "Use $manage-delivery-board to identify blocked, unblocked, duplicate, and next-ready work on this project board."

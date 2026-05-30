@@ -8,7 +8,7 @@ description: |
 
 Use this skill to generate a concise maintainer briefing. It replaces model-specific standup variants with one portable workflow.
 
-Read `references/workflow.md`, gather available repository/GitHub context, and produce a prioritized digest.
+Read `references/workflow.md`, gather available repository/GitHub context, and produce a prioritized digest. Use `manage-delivery-board` when the standup needs dependency-aware blocked/unblocked project-board sequencing.
 
 ## Documentation Output
 

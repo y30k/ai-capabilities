@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Technical Design"
+  short_description: "Turn PRDs into technical designs"
+  default_prompt: "Use $create-technical-design to turn this approved PRD into an implementation-ready technical design."

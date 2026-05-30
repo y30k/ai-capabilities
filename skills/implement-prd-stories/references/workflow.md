@@ -1,92 +1,107 @@
 # Implement PRD Stories Workflow
 
-## 1. Confirm Handoff
+## 1. Confirm Implementation Source
 
-- Identify the PRD path or pasted PRD content.
-- Read the PRD fully.
-- Check whether the user has explicitly approved it for implementation.
-- If approval is missing, summarize the PRD and ask: "Do you approve implementing this PRD as written?" Stop until the user answers.
+Accept these sources, in priority order:
 
-## 2. Extract Implementation Inputs
+1. A specific GitHub/Jira tracker item with relationship data.
+2. A ready queue from `manage-delivery-board`.
+3. Approved work items from `create-prd-work-items`.
+4. An approved local story list under `docs/`.
+5. A PRD fallback only when the user explicitly asks for temporary local planning.
 
-Extract and preserve:
+For tracker sources, fetch the current item state before coding. For local stories, read the story table and source PRD/design.
 
-- Problem and proposed solution.
-- Key hypothesis and success metrics.
-- Non-goals and out-of-scope items.
-- Must/should/could/won't capabilities.
-- Technical approach and verified file references.
-- Implementation phases, dependencies, and open questions.
-- Validation notes and any `TBD — needs research` items.
+If the only input is an approved PRD, ask: "Do you want me to use `create-prd-work-items` to create durable tracker stories first, or draft a local temporary story plan for this session?" Stop until the user chooses.
 
-If an open question changes implementation scope, ask the user before coding.
+## 2. Verify Readiness
 
-## 3. Create Story Breakdown
+A story is ready only when:
 
-Create small stories that can each be completed in one implementation slice.
+- it is approved for implementation
+- it is not blocked by any open tracker relationship or local dependency
+- the owning repo/system matches the current task or the user explicitly asks for cross-repo work
+- acceptance criteria are observable and testable
+- validation commands/checks are known or a practical fallback is agreed
+- required design/PRD context is linked or available
+- external services, secrets, environments, or signoffs needed for the story are available or not required
 
-Good story size examples:
+Do not treat labels/tags or prose mentions as sufficient blocker truth when tracker relationships exist.
 
-- Add or modify one schema field plus focused tests.
-- Add one utility or service function plus tests.
-- Extend one API endpoint or command path.
-- Add one UI component state or integration.
-- Wire an existing component to a new data field.
+If readiness is unclear, use `manage-delivery-board` or ask the user instead of coding.
 
-Avoid stories like "build the whole feature" or "add authentication"; split them by dependency.
+## 3. Build Focused Implementation Plan
 
-Story fields:
+For the selected story, read the source PRD/design/work item and relevant code. Present:
 
 ```markdown
-| ID | Title | Acceptance Criteria | Depends On | Validation |
-| --- | --- | --- | --- | --- |
-| US-001 | {small slice} | {pass/fail criteria} | - | {test/check} |
+## Implementation Plan
+
+**Story**: {tracker ref or local ID}
+**Why ready**: {relationship/dependency evidence}
+**Scope**: {one-slice summary}
+**Files likely touched**: {paths}
+**Acceptance criteria**: {criteria}
+**Validation**: {commands/manual checks}
+**Out of scope**: {non-goals and related blocked work}
 ```
 
-## 4. Approval Gate
+Ask for approval before source-code edits unless already granted for this exact story.
 
-Present the story breakdown, planned file areas, validation commands, and known risks. Ask for approval before source-code edits.
+## 4. Implement One Story
 
-Proceed only when the user confirms. If they request changes, update the story breakdown first.
+1. Re-read relevant code and tests.
+2. Make the smallest change that satisfies the story.
+3. Add/update tests when appropriate for the story's validation plan.
+4. Run targeted validation first.
+5. Run broader required checks if the story affects shared contracts, schemas, build paths, or risky behavior.
+6. Mark the story `pass`, `blocked`, or `failed` with evidence.
 
-## 5. Implement One Story at a Time
+Do not continue to another story after a failed validation unless the user asks for a repair attempt or the next story is independent and safe.
 
-For each story:
+## 5. Scope and Blocker Control
 
-1. Re-read the relevant PRD section and existing code.
-2. Implement the smallest change that satisfies the story.
-3. Run the story's validation command or the closest practical check.
-4. Mark the story `pass`, `fail`, or `blocked` with notes.
-5. Continue to the next dependency-ready story only if validation is acceptable.
+Stop and ask before:
 
-## 6. Scope Control
+- implementing a blocked or dependent item
+- changing requirements, non-goals, or acceptance criteria
+- broad refactors not required by the story
+- touching another repo/system not authorized for this run
+- weakening validation to make the story pass
+- creating new tracker items without approval
 
-Stop and ask the user before:
+If implementation discovers missing dependency work, record the blocker and route to `create-prd-work-items` or `manage-delivery-board`.
 
-- Adding capabilities not in the PRD.
-- Changing non-goals.
-- Making broad refactors not required by the story.
-- Proceeding when validation contradicts the PRD.
-- Implementing a story with unresolved `TBD` requirements.
+## 6. Tracker/Story Updates
+
+When authorized, update the tracker or local story file:
+
+- status/result
+- validation commands and outcomes
+- linked branch/commit/PR if available
+- newly discovered blockers using tracker-native relationships
+- follow-up items for out-of-scope work
+
+Do not encode new blockers only as labels if relationship links are available.
 
 ## 7. Final Report
 
 ```markdown
-## PRD Implementation Report
+## PRD Story Implementation Report
 
-**PRD**: {path}
-**Stories completed**: {n}/{total}
-
-| Story | Status | Validation | Notes |
-| --- | --- | --- | --- |
-| US-001 | pass/fail/blocked | {command/result} | {notes} |
+**Source**: {tracker/project/PRD/local plan}
+**Story completed**: {ref/title}
+**Status**: pass | blocked | failed
 
 ### Changed Files
 - `{path}` — {summary}
 
 ### Validation Summary
-- {commands and outcomes}
+- `{command}` — {pass/fail/not run and why}
+
+### Tracker Updates
+- {items/relationships/statuses updated or not authorized}
 
 ### Remaining Work or Risks
-- {open items}
+- {open blockers, follow-ups, next ready item if known}
 ```

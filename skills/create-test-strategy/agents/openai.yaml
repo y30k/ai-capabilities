@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Test Strategy"
+  short_description: "Plan acceptance and release tests"
+  default_prompt: "Use $create-test-strategy to create a validation matrix and test plan for this feature."

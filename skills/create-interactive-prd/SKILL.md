@@ -16,7 +16,7 @@ Use this skill to run an interactive PRD interview directly in the coding-agent 
 
 ## Boundary
 
-This is a **planning and requirements skill only**. It may read project files to verify feasibility, but it must not modify source code, implement features, create branches, or open PRs. After validating the PRD, stop and ask the user to review it. Implementation requires a separate explicit request, such as using `implement-prd-stories` after the PRD is approved.
+This is a **planning and requirements skill only**. It may read project files to verify feasibility, but it must not modify source code, implement features, create branches, or open PRs. After validating the PRD, stop and ask the user to review it. Implementation requires separate explicit requests. For full AI-DLC flow, use `create-technical-design`, then `create-test-strategy`, then `create-prd-work-items`, then `implement-prd-stories` after work items are approved and unblocked.
 
 ## Core Rules
 
@@ -157,7 +157,7 @@ Report:
 - **Key Metric**: {primary success metric}
 
 ### Recommended Next Step
-Review the PRD. After explicit approval, use `implement-prd-stories` or another coding skill to implement it.
+Review the PRD. After explicit approval, use `create-technical-design` to refine implementation architecture, `create-test-strategy` to define validation, then `create-prd-work-items` to create dependency-linked tracker stories. Use `implement-prd-stories` only after a story is approved and unblocked.
 ```
 
 ## Documentation Output
