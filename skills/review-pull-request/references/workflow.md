@@ -14,7 +14,8 @@
 | comprehensive | user asks full/deep review | all lanes |
 | maintainer | merge decision needed | direction, scope, user impact, review posture |
 | validation | prove behavior changed correctly | base vs feature checks |
-| fix-review-findings | user wants fixes | implement high-confidence findings |
+| fix-review-findings | user wants fixes from this review run | implement high-confidence findings without required thread replies |
+| address existing review comments | user wants reviewer threads addressed, replied to, committed, and pushed | hand off to `address-pr-review-comments` |
 
 ## 3. Review Lanes
 
@@ -49,11 +50,13 @@ Group findings by severity:
 
 ## 6. Optional Fixes
 
-If asked to fix findings:
+If asked to fix findings from this review run:
 
 - Implement only high-confidence, in-scope fixes.
 - Do not rewrite the PR unnecessarily.
 - Rerun validation and summarize remaining findings.
+
+If asked to address existing GitHub review comments or reply to reviewer threads before pushing, use `address-pr-review-comments` instead.
 
 ## 7. Output
 

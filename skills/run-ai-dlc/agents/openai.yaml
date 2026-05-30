@@ -1,0 +1,4 @@
+interface:
+  display_name: "Run AI-DLC"
+  short_description: "Orchestrate the AI delivery lifecycle"
+  default_prompt: "Use $run-ai-dlc to choose the right skills and gates for this delivery lifecycle."

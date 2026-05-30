@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create PRD Work Items"
+  short_description: "Split PRDs into linked tickets"
+  default_prompt: "Use $create-prd-work-items to split this approved PRD into deduped, dependency-linked project work items."

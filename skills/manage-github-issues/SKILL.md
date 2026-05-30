@@ -6,9 +6,9 @@ description: |
 
 # Manage GitHub Issues
 
-Use this skill for issue creation and triage. Use `fix-github-issue` when the user wants code changes.
+Use this skill for issue creation and triage. Use `fix-github-issue` when the user wants code changes. Use `create-prd-work-items` instead when the user wants an approved PRD split into dependency-linked GitHub/Jira implementation stories.
 
-Read `references/workflow.md` and choose **create issue** or **triage backlog**.
+Read `references/workflow.md` and choose **create issue** or **triage backlog**. For board-level dependency sequencing and next-ready work, use `manage-delivery-board`.
 
 ## Documentation Output
 
