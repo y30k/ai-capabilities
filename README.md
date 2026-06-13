@@ -77,6 +77,7 @@ Current repository-original skills:
 - `create-technical-design` — approved PRD/spec to implementation-ready technical design, ADRs, contracts, rollout/rollback, observability, and risks.
 - `create-test-strategy` — requirements/design/work items to acceptance, regression, integration, performance, security, accessibility, and release validation matrix.
 - `create-prd-work-items` — approved PRD/design to deduped, dependency-linked GitHub/Jira work items with tracker-native relationships.
+- `design-polished-web-ui` — design, implement, visually iterate, and validate polished responsive web UI using design artifacts, existing components, inspiration sources, and FOSS visual/a11y tooling.
 - `manage-delivery-board` — project-board inspection, blocked/unblocked queue management, stale-item cleanup, duplicate detection, and implementation handoff.
 - `observe-release` — post-release health verification, rollout/watch/rollback recommendation, production learning, and follow-up issue capture.
 - `run-ai-dlc` — lifecycle router for choosing the right skill, gate, and artifact at each AI-DLC phase.
@@ -128,6 +129,7 @@ Recommended entry points:
 - Use `skills/create-interactive-prd/SKILL.md` for new product discovery and PRDs.
 - Use `skills/create-technical-design/SKILL.md`, `skills/create-test-strategy/SKILL.md`, and `skills/create-prd-work-items/SKILL.md` after PRD approval.
 - Use `skills/manage-delivery-board/SKILL.md` before implementation sessions that depend on GitHub Projects, GitHub Issues, or Jira.
+- Use `skills/design-polished-web-ui/SKILL.md` when building, polishing, or visually iterating responsive web UI.
 - Use `skills/address-pr-review-comments/SKILL.md` after PR reviewers leave requested changes or threaded feedback to address.
 - Use `skills/observe-release/SKILL.md` after release or deployment.
 
