@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design Polished Web UI"
+  short_description: "Polished responsive web UI workflow"
+  default_prompt: "Use $design-polished-web-ui to design and iterate this responsive web interface."
