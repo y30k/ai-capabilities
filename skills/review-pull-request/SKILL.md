@@ -20,6 +20,8 @@ Read `references/workflow.md`, then choose:
 
 ## Handoff
 
+Use `submit-change-request` first when changes are still local, no PR/MR exists, or PR-connected CI/CD needs to be created or monitored before review.
+
 Use `address-pr-review-comments` after reviewers request changes or leave threaded feedback that should be answered on GitHub before pushing a fix commit.
 
 ## Documentation Output

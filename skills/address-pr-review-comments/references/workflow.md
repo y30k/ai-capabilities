@@ -133,5 +133,6 @@ Return:
 - Thread replies posted, with URLs if available.
 - Files changed.
 - Validation commands and results.
+- Current CI/CD status if available, or a `submit-change-request` handoff for update/CI monitoring.
 - Any unresolved, deferred, blocked, or user-decision items.
 - Whether another review pass is recommended.

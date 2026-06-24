@@ -2,7 +2,7 @@
 
 A project-local collection of reusable AI-agent skills. Each skill is a self-contained folder under `skills/` with a `SKILL.md` manifest and optional supporting references.
 
-The repository now organizes its skills around an **AI Development Life Cycle (AI-DLC)**: readiness, discovery/PRD, technical design, test strategy, work-item decomposition, board readiness, implementation, review, review-comment remediation, integration, production readiness, release, observation, and feedback.
+The repository now organizes its skills around an **AI Development Life Cycle (AI-DLC)**: readiness, discovery/PRD, technical design, test strategy, work-item decomposition, board readiness, implementation, change-request submission, CI/CD verification, review, review-comment remediation, integration, production readiness, release, observation, and feedback.
 
 See [`docs/ai-dlc.md`](docs/ai-dlc.md) for the full process, rationale, phase order, gates, and skill handoffs.
 
@@ -35,8 +35,10 @@ agent-smoke-test
 → create-prd-work-items
 → manage-delivery-board
 → implement-prd-stories
+→ submit-change-request
 → review-pull-request
 → address-pr-review-comments, if reviewers request changes
+→ submit-change-request, to monitor updated CI when needed
 → resolve-merge-conflicts, if needed
 → check-production-readiness
 → release
@@ -44,7 +46,7 @@ agent-smoke-test
 → maintainer-standup / manage-github-issues / improve-code-health
 ```
 
-Small approved changes can use `develop-feature` or `fix-github-issue` directly, then review and validate. Larger or ambiguous work should move through the full PRD/design/test/work-item path before coding.
+Small approved changes can use `develop-feature` or `fix-github-issue` directly, then `submit-change-request` before review. Larger or ambiguous work should move through the full PRD/design/test/work-item path before coding.
 
 ## Generated Documentation Convention
 
@@ -60,6 +62,7 @@ Examples:
 - Feature plans: `docs/develop-feature/{slug}/implementation-plan.md`
 - GitHub issue findings: `docs/github-issues/{issue}/findings.md`
 - PRD implementation tracking: `docs/implement-prd-stories/{story}.md`
+- Change-request submission notes: `docs/submit-change-request/{pr-or-branch}.md`
 - PR review-response notes: `docs/address-pr-review-comments/{pr-number}.md`
 - Release observations: `docs/release-observations/{version-or-date}.md`
 - AI-DLC lifecycle plans: `docs/ai-dlc/{topic}.md`
@@ -68,7 +71,7 @@ Examples:
 
 ### Repository-original and AI-DLC lifecycle skills
 
-These skills were created from scratch for this repository and related y30k/Capelry projects. They include the skills that fill the AI-DLC gaps between PRD approval and coding, plus the post-release observation loop.
+These skills were created from scratch for this repository and related y30k/Capelry projects. They include the skills that fill the AI-DLC gaps between PRD approval and coding, between validated implementation and PR review, plus the post-release observation loop.
 
 Current repository-original skills:
 
@@ -81,6 +84,7 @@ Current repository-original skills:
 - `manage-delivery-board` — project-board inspection, blocked/unblocked queue management, stale-item cleanup, duplicate detection, and implementation handoff.
 - `observe-release` — post-release health verification, rollout/watch/rollback recommendation, production learning, and follow-up issue capture.
 - `run-ai-dlc` — lifecycle router for choosing the right skill, gate, and artifact at each AI-DLC phase.
+- `submit-change-request` — commit validated changes, push a branch, create or update a PR/MR by default, support explicit fast-track direct-to-default as a non-default exception, and monitor connected CI/CD across common providers.
 
 ### Workflow-inspired coding-agent skills
 
@@ -93,7 +97,7 @@ Current workflow-inspired skills:
 - `create-interactive-prd` — planning-only interactive PRD creation.
 - `develop-feature` — plan-gated feature implementation for approved smaller features or specs.
 - `fix-github-issue` — selectable-rigor GitHub issue fixing.
-- `implement-prd-stories` — implement approved, unblocked tracker/local stories one slice at a time.
+- `implement-prd-stories` — implement approved, unblocked tracker/local stories one slice at a time, advance story statuses, and refresh blocked-story readiness.
 - `improve-code-health` — architecture review and safe refactoring.
 - `maintainer-standup` — maintainer status briefing.
 - `manage-github-issues` — create, dedupe, and triage issues.
@@ -113,7 +117,8 @@ Examples:
 - `create-test-strategy` defines validation gates before implementation.
 - `create-prd-work-items` creates or updates tracker stories only after permission.
 - `manage-delivery-board` identifies the next unblocked work item.
-- `implement-prd-stories` starts after work-item approval and implements one validated slice at a time.
+- `implement-prd-stories` starts after work-item approval, implements one validated slice at a time, updates routine story status, and moves newly unblocked stories to ready when blocker relationships are satisfied.
+- `submit-change-request` commits, pushes, creates/updates PRs or MRs, and monitors CI/CD only with authorization; direct-to-default fast track is non-default and requires explicit fast-track/bypass-PR wording.
 - `address-pr-review-comments` replies on PR review threads, implements approved fixes, validates, commits, and pushes only with authorization.
 - `observe-release` verifies health and captures follow-up work after release; it should not rollback or mutate production without explicit authorization.
 
@@ -130,6 +135,7 @@ Recommended entry points:
 - Use `skills/create-technical-design/SKILL.md`, `skills/create-test-strategy/SKILL.md`, and `skills/create-prd-work-items/SKILL.md` after PRD approval.
 - Use `skills/manage-delivery-board/SKILL.md` before implementation sessions that depend on GitHub Projects, GitHub Issues, or Jira.
 - Use `skills/design-polished-web-ui/SKILL.md` when building, polishing, or visually iterating responsive web UI.
+- Use `skills/submit-change-request/SKILL.md` after validated implementation or branch updates to open/update a PR/MR and watch CI/CD, or for explicit non-default fast-track direct-to-default pushes.
 - Use `skills/address-pr-review-comments/SKILL.md` after PR reviewers leave requested changes or threaded feedback to address.
 - Use `skills/observe-release/SKILL.md` after release or deployment.
 

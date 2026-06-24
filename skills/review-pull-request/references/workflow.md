@@ -2,7 +2,7 @@
 
 ## 1. Fetch Context
 
-- Identify PR number/branch.
+- Identify PR number/branch. If no PR/MR exists yet, hand off to `submit-change-request` first.
 - Read title, body, linked issues, changed files, diff, checks, comments, and project rules.
 - Understand explicit scope and non-goals before flagging missing features.
 

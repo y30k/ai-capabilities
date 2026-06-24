@@ -24,7 +24,7 @@ Do not use this skill for first-pass PR review; use `review-pull-request`. Do no
 6. Check out the PR branch and implement only high-confidence, in-scope fixes tied to the review comments.
 7. Run targeted validation and any relevant required checks; stop if validation fails or feedback changes scope.
 8. Reply on each original review thread before pushing the commit, with concise disposition and validation evidence. Use a top-level PR comment only for non-thread feedback or a final summary.
-9. Commit only the intended changes, push to the PR branch, then report pushed commit, validation, thread replies, and remaining unresolved items.
+9. Commit only the intended changes, push to the PR branch, then report pushed commit, validation, thread replies, current CI/CD status if available, and remaining unresolved items. Use `submit-change-request` in update or CI-monitor-only mode when connected automation needs watching after the push.
 
 ## Required Reply Discipline
 

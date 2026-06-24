@@ -1,142 +1,239 @@
 # AI Development Life Cycle (AI-DLC)
 
-This repository manages a set of reusable AI-agent skills that together form an AI Development Life Cycle (AI-DLC): a gated, artifact-driven process for taking work from initial readiness and discovery through implementation, PR review remediation, release, observation, and backlog feedback.
+AI-DLC is this repository's operating model for AI-assisted software delivery. It combines reusable agent skills, explicit artifacts, human approval gates, validation evidence, CI/CD feedback, review discipline, release readiness, production observation, and backlog learning into one lifecycle.
 
-The AI-DLC is not meant to add ceremony for its own sake. It exists to keep AI-assisted development from skipping critical handoffs: requirements before design, design before tickets, validation before code, dependency checks before implementation, review before remediation, reviewer-thread replies before pushing fixes, review before release, and observation after shipping.
+Use AI-DLC when you want an AI coding agent to move safely from an idea or issue to reviewed, validated, shipped, and observed software without skipping the handoffs that make software delivery reliable.
 
-If you are unsure which skill to use, start with `run-ai-dlc`. It is the meta-skill that routes work to the right phase, gate, and artifact.
+If you are unsure which skill to use next, start with `run-ai-dlc`. It is the lifecycle router for choosing the right phase, skill, gate, and input artifact.
 
-## Why This Process Exists
+## Why AI-DLC Is Valuable
 
-A review of the project-local skills originally staged in `.pi/skills/` and now managed from this repository's `skills/` directory found that the original set was strong in these areas:
+AI agents can create code quickly, but speed without lifecycle discipline creates familiar SDLC failure modes faster: unclear requirements, unreviewed design choices, missing tests, blocked dependencies, untracked work, brittle CI, review churn, unsafe releases, and no production feedback loop.
 
-- PRD creation
-- GitHub issue fixing
-- Feature implementation
-- Pull request review
-- Production readiness checks
-- Release preparation and execution
-- Maintenance digests and backlog triage
+AI-DLC addresses that by making each transition explicit:
 
-The main gaps were between PRD approval and coding, plus after release:
+- **Intent before implementation** — clarify problem, scope, success, and non-goals before coding large or ambiguous work.
+- **Design before decomposition** — turn approved requirements into architecture, contracts, rollout, rollback, observability, and risk decisions before tickets are created.
+- **Validation before code and review** — plan test strategy, acceptance checks, and nonfunctional gates before implementation and carry that evidence into PR/MR submission.
+- **Dependency-aware delivery** — use tracker-native relationships so agents only implement unblocked work.
+- **Small, approved slices** — implement one ready story or fix at a time and validate before moving on.
+- **Reviewable submissions** — commit only the intended diff, create or update a PR/MR by default, and watch connected CI/CD before review/readiness decisions. Direct-to-default fast track is a non-default exception that requires explicit wording.
+- **Reviewer feedback closure** — answer reviewer threads where they were raised, tie fixes to validation evidence, then push updates and recheck automation.
+- **Fail-closed readiness** — treat production readiness as unproven until required local, CI/CD, security, performance, and external gates are known and passed or explicitly waived.
+- **Release is not the end** — observe rollout health, incidents, telemetry gaps, and user/operator feedback, then feed learnings back into issues, PRDs, or code-health work.
 
-1. No dedicated technical design/ADR handoff after PRD approval.
-2. PRD story creation was conflated with coding in `implement-prd-stories`.
-3. No tracker-native PRD-to-stories workflow using GitHub Projects/Jira relationships.
-4. No standalone test strategy/validation matrix before implementation.
-5. No dependency-aware board management to select unblocked work.
-6. No post-release observation/learning loop.
-7. No AI-DLC orchestrator skill to route between all phases.
+## How AI-DLC Builds on SDLC Evolution
 
-A follow-up review gap was also identified after the initial lifecycle work: existing PR review support could optionally implement safe fixes, but there was no dedicated workflow for reading unresolved PR review threads, addressing each issue, replying on the original threads, and pushing the update commit.
+AI-DLC is not a replacement for decades of software delivery practice. It is a practical adaptation of SDLC, Agile, DevOps, secure SDLC, SRE, and AI governance ideas for AI-agent-assisted development.
 
-The current AI-DLC closes those gaps with dedicated skills for technical design, test strategy, work-item decomposition, delivery-board management, PR review-thread remediation, post-release observation, and lifecycle orchestration.
+| SDLC evolution | What it contributed | How AI-DLC applies it |
+| --- | --- | --- |
+| Traditional SDLC | Structured phases such as planning, design, implementation, testing, deployment, and maintenance. | Keeps visible phases and exit gates so agents do not jump from request to code to release without evidence. |
+| Waterfall and phase-gate methods | Clear handoffs, approval points, and traceable artifacts. | Uses approval gates for PRDs, technical design, test strategy, tracker items, implementation, submission, readiness, and release. |
+| Iterative, incremental, and spiral models | Smaller increments, risk discovery, and feedback loops instead of one large delivery bet. | Encourages one approved, unblocked slice at a time, with validation and rerouting when risk or blockers appear. |
+| Agile | Customer collaboration, working software, adaptability, and regular feedback. | Supports lightweight paths for small approved changes while requiring stronger artifacts when ambiguity or risk grows. |
+| DevOps and CI/CD | Continuous integration, delivery automation, cross-functional ownership, and faster feedback. | Adds `submit-change-request` to commit/push/create PRs or MRs, monitor CI/CD, and make automation state explicit. |
+| Secure SDLC and NIST SSDF-style practices | Security and supply-chain risk reduction across design, implementation, release, and maintenance. | Requires security/privacy consideration in design, test strategy, production readiness, CI/CD triage, and follow-up work. |
+| SRE and observability | SLOs, monitoring, rollback criteria, postmortems, and production learning. | Uses `observe-release` after release/deploy and feeds incidents, telemetry gaps, and user feedback back into the backlog. |
+| AI lifecycle and AI governance | Human oversight, risk mapping, evaluation, deployment monitoring, and continuous improvement for AI-enabled systems. | Keeps humans in control of approvals and irreversible actions while using agents for repeatable planning, coding, review, validation, and monitoring work. |
 
-## Core Principles
+The result is a lifecycle that preserves SDLC rigor while making AI agents useful: agents can accelerate each phase, but the phase gates keep ownership, evidence, and accountability visible.
 
-- **Use the smallest useful gate.** Lightweight changes do not need a full PRD, but large or ambiguous work should not jump directly to code.
-- **Keep planning and coding separate.** Planning/design skills create reviewable artifacts. Coding skills require approved inputs and explicit permission before source-code edits.
-- **Ground technical claims in the repository.** Requirements, designs, and test strategies should cite actual files, APIs, schemas, tests, and deployment behavior when making technical assertions.
-- **Use tracker-native relationships for delivery state.** `blocks`, `blocked by`, `parent/child`, `duplicate`, and `related` should live in GitHub Projects, GitHub Issues, or Jira relationship fields where supported, not only in labels or prose.
-- **Implement one approved, unblocked slice at a time.** AI agents should not batch unrelated work or code items with unresolved dependency blockers.
-- **Close reviewer feedback in the original thread.** When a PR receives review comments, address each thread with a clear disposition, validation evidence, and a pushed fix or explicit owner decision.
-- **Treat release as unfinished until observed.** A version tag, deploy, or package publish is not the end of the lifecycle; rollout health and follow-up work must be captured.
-- **Feed learnings back into the backlog.** Incidents, user feedback, missing telemetry, technical debt, and product learnings become issues, PRDs, or code-health work.
+## First-Time User Quick Start
+
+1. **Start with the lifecycle router** when the next step is unclear:
+   - Use `run-ai-dlc`.
+   - Provide the current artifact: idea, PRD, issue, branch, PR/MR, release candidate, or deployment.
+2. **Choose the smallest lifecycle path that fits the risk.**
+   - Small approved bug or feature: `fix-github-issue` or `develop-feature` → validation → `submit-change-request`.
+   - Larger feature: PRD → design → test strategy → work items → board readiness → implementation.
+   - Existing PR/MR: `review-pull-request`, then `address-pr-review-comments` when reviewers request changes.
+   - Release candidate: `check-production-readiness` → `release` → `observe-release`.
+3. **Respect phase gates.**
+   - Planning skills produce reviewable artifacts and stop for approval.
+   - Coding skills require approved inputs and validation.
+   - Submission/release/production actions require explicit authorization.
+4. **Write generated documentation under `docs/`.**
+   - Do not store durable plans or reports in `.pi/`, `.agents/`, `.codex/`, `.claude/`, or other agent-specific directories.
 
 ## Recommended AI-DLC Order
 
-| Phase | Primary skill | Why this phase matters | Exit gate |
+| Phase | Purpose | Primary skill | Exit gate |
 | --- | --- | --- | --- |
-| 0. Agent/workspace readiness | `agent-smoke-test` | Verifies tools, repository safety, and guardrails before meaningful work starts. | Tools, repo safety, and guardrails understood |
-| 1. Discovery and PRD | `create-interactive-prd` | Turns an idea into a problem-first, evidence-backed, codebase-grounded PRD. | Validated PRD approved |
-| 2. Technical design | `create-technical-design` | Converts approved requirements into implementation-ready architecture, ADRs, contracts, rollout/rollback, observability, and risk decisions. | Design/ADR/contracts approved |
-| 3. Test strategy | `create-test-strategy` | Maps requirements, design choices, and risks to acceptance, regression, integration, performance, security, accessibility, and release validation. | Validation matrix and gates approved |
-| 4. Work-item decomposition | `create-prd-work-items` | Creates or updates deduped, cross-repo GitHub/Jira work items with tracker-native relationships and dependency-based priority. | Deduped tracker items created/approved with relationships and validation |
-| 5. Board readiness | `manage-delivery-board` | Finds blocked and unblocked work, duplicates, stale items, relationship problems, and the next implementation-ready queue. | Next-ready queue has no unresolved blockers |
-| 6. Implementation | `implement-prd-stories` | Implements one approved, unblocked tracker/local story at a time with validation after each slice. | One unblocked story implemented and validated |
-| 7. PR review | `review-pull-request` | Reviews behavior, risks, tests, maintainability, and release impact before merge. | Findings documented and owner disposition clear |
-| 8. PR review remediation | `address-pr-review-comments` | Fetches unresolved review threads, addresses approved issues, replies on original threads before pushing, then commits and pushes validated fixes. | Review threads replied to; fixes validated and pushed |
-| 9. Integration hygiene | `resolve-merge-conflicts` | Resolves merge/rebase conflicts safely and reruns validation after integration changes. | Conflicts resolved and validation rerun |
-| 10. Production readiness | `check-production-readiness` | Runs a strict, fail-closed staged release-candidate review before exposing changes to users. | READY/CONDITIONALLY READY verdict |
-| 11. Release | `release` | Handles versioning, changelog/release notes, tags, publishing, and deployment ceremony with approval gates. | Version/tag/publish/deploy complete |
-| 12. Observe rollout | `observe-release` | Verifies production or staging health, SLOs, logs, metrics, dashboards, flags, incidents, and rollback criteria. | Health state and follow-up work recorded |
-| 13. Feedback/maintenance | `maintainer-standup`, `manage-github-issues`, `improve-code-health` | Triage learnings, bugs, stale work, and maintainability findings back into the backlog. | Learnings triaged back into backlog |
+| 0. Agent/workspace readiness | Verify tools, repository safety, and agent guardrails before meaningful work starts. | `agent-smoke-test` | Tools, repo safety, and guardrails understood |
+| 1. Discovery and PRD | Turn an idea into a problem-first, evidence-backed, codebase-grounded PRD. | `create-interactive-prd` | Validated PRD approved |
+| 2. Technical design | Convert approved requirements into architecture, contracts, rollout/rollback, observability, and risk decisions. | `create-technical-design` | Design/ADR/contracts approved |
+| 3. Test strategy | Map requirements, design choices, and risks to acceptance, regression, integration, performance, security, accessibility, and release validation. | `create-test-strategy` | Validation matrix and gates approved |
+| 4. Work-item decomposition | Create or update deduped, cross-repo GitHub/Jira work items with tracker-native relationships and validation. | `create-prd-work-items` | Work items created/approved with relationships and validation |
+| 5. Board readiness | Find blocked/unblocked work, duplicates, stale items, relationship problems, and the next implementation-ready queue. | `manage-delivery-board` | Next-ready queue has no unresolved blockers |
+| 6. Implementation | Implement one approved, unblocked tracker/local story or focused fix at a time; advance story status and refresh blocked-story readiness. | `implement-prd-stories`, `develop-feature`, `fix-github-issue`, specialty implementation skills | Slice implemented and validated; story status updated; newly unblocked work moved Ready |
+| 7. Change request submission | Commit intended changes, push, create/update a PR/MR by default, and watch connected CI/CD. Explicit fast-track direct-to-default is a non-default exception. | `submit-change-request` | PR/MR exists, or explicit fast-track push is complete; required automation passed or is triaged |
+| 8. PR review | Review behavior, risk, tests, maintainability, and release impact. | `review-pull-request` | Findings documented and owner disposition clear |
+| 9. PR review remediation | Fetch unresolved review threads, address approved issues, reply on original threads, validate, commit, push, and recheck automation when needed. | `address-pr-review-comments` | Review threads replied to; fixes validated and pushed |
+| 10. Integration hygiene | Resolve merge/rebase conflicts safely and rerun validation after integration changes. | `resolve-merge-conflicts` | Conflicts resolved and validation rerun |
+| 11. Production readiness | Run strict fail-closed release-candidate review before exposing changes to users. | `check-production-readiness` | READY/CONDITIONALLY READY verdict |
+| 12. Release | Handle versioning, changelog/release notes, tags, publishing, package distribution, or deployment ceremony. | `release` | Version/tag/publish/deploy complete |
+| 13. Observe rollout | Verify staging/production health, SLOs, logs, metrics, dashboards, flags, incidents, rollback criteria, and user/operator feedback. | `observe-release` | Health state and follow-up work recorded |
+| 14. Feedback and maintenance | Triage learnings, bugs, stale work, and maintainability findings back into the backlog. | `maintainer-standup`, `manage-github-issues`, `improve-code-health` | Learnings triaged into follow-up work |
 
-### Preferred Feature Flow
+## Core Principles
 
-For a new feature that is large enough to need a PRD, use this sequence:
+- **Use the smallest useful gate.** Lightweight changes do not need a full PRD. Large, ambiguous, risky, cross-repo, or product-shaping work should not jump directly to code.
+- **Keep planning and coding separate.** Planning/design skills create reviewable artifacts. Coding skills require approved inputs and explicit permission before source-code edits when consuming plans, PRDs, or tracker items.
+- **Ground technical claims in the repository.** Requirements, designs, and test strategies should cite actual files, APIs, schemas, tests, deployment behavior, and operational constraints when making technical assertions.
+- **Use tracker-native relationships for dependency truth.** `blocks`, `blocked by`, `parent/child`, `duplicate`, and `related` should live in GitHub Projects, GitHub Issues, Jira links, or equivalent relationship fields where supported, not only in labels or prose.
+- **Implement one approved, unblocked slice at a time.** Do not batch unrelated work or code items with unresolved blockers.
+- **Make submission state explicit.** After validation, commit only the intended diff, create/update a PR/MR by default, and record CI/CD state before review or readiness. Use direct-to-default fast track only when the user explicitly asks for that git-context path.
+- **Close reviewer feedback in the original thread.** When a PR/MR receives review comments, address each thread with a clear disposition, validation evidence, and a pushed fix or explicit owner decision.
+- **Treat readiness as fail-closed.** Unknown required gates, blocked external checks, unexplained validation failures, and unresolved P0/P1/P2 issues mean not ready.
+- **Observe after release.** A version tag, deploy, or package publish is incomplete until rollout health and follow-up work are captured.
+- **Feed learnings back.** Incidents, user feedback, missing telemetry, technical debt, and product insights become issues, PRDs, code-health work, or future release tasks.
+
+## Lifecycle Coverage by Skill
+
+### Planning and design
+
+| Skill | Use for | Typical handoff |
+| --- | --- | --- |
+| `create-interactive-prd` | New product ideas, ambiguous features, problem discovery, success metrics, non-goals, and codebase feasibility. | Approved PRD → `create-technical-design` |
+| `create-technical-design` | Architecture, ADRs, contracts, data/migration notes, rollout/rollback, observability, security/privacy, and risk review. | Approved design → `create-test-strategy` |
+| `create-test-strategy` | Acceptance, regression, integration, performance, accessibility, security, and release validation planning. | Validation matrix → `create-prd-work-items`, implementation, review, readiness |
+| `create-prd-work-items` | PRD/design decomposition into deduped, dependency-linked GitHub/Jira work items. | Tracker items → `manage-delivery-board` |
+| `manage-delivery-board` | Board hygiene, blocked/unblocked queue, dependency cleanup, duplicate detection, stale item triage, implementation handoff. | Next ready item → `implement-prd-stories` |
+
+### Implementation and submission
+
+| Skill | Use for | Typical handoff |
+| --- | --- | --- |
+| `implement-prd-stories` | Approved, unblocked PRD stories or tracker work items, one slice at a time, including routine status progression and post-completion blocked-story readiness sweeps. | Validated change → `submit-change-request`; newly unblocked stories → Ready queue |
+| `develop-feature` | Smaller approved features, existing plans/specs, app briefs, or direct implementation requests outside the full PRD flow. | Validated change → `submit-change-request` |
+| `fix-github-issue` | Issue-driven bug fixing, reproduction, investigation, planning, implementation, validation, or validation-only work. | Validated fix → `submit-change-request` |
+| `design-polished-web-ui` | Responsive web UI/UX implementation, polish, visual iteration, accessibility checks, and screenshot/Figma-informed changes. | Validated UI change → `submit-change-request` |
+| `remotion-generate` | Remotion video compositions, previews, renders, and troubleshooting. | Validated composition/render → `submit-change-request` or project-specific handoff |
+| `submit-change-request` | Commit/push/create-or-update PR/MR, monitor CI/CD, or explicitly fast-track to default when requested. | PR/MR → `review-pull-request`; fast track → readiness/release/observation as appropriate |
+
+### Review, readiness, release, and operations
+
+| Skill | Use for | Typical handoff |
+| --- | --- | --- |
+| `review-pull-request` | Adaptive, comprehensive, maintainer, or validation-focused PR/MR review. | Findings → owner disposition or `address-pr-review-comments` |
+| `address-pr-review-comments` | Existing review threads that need replies, approved fixes, validation, commit, push, and CI/CD recheck. | Updated branch → `submit-change-request` monitor mode or another review pass |
+| `resolve-merge-conflicts` | Merge, rebase, cherry-pick, or branch conflicts. | Resolved branch → `submit-change-request` |
+| `check-production-readiness` | Strict staged release-candidate review, mandatory gate discovery, P0/P1/P2 fixes, performance readiness, and final verdict. | READY/CONDITIONALLY READY → `release` |
+| `release` | Versioning, changelog, tag, package publish, deployment ceremony, and release notes. | Release/deploy → `observe-release` |
+| `observe-release` | Post-release or post-deployment health, SLOs, logs, dashboards, feature flags, incidents, rollback recommendation, and follow-up capture. | Learnings → backlog, PRD, issue, code health, hotfix |
+
+### Support and maintenance
+
+| Skill | Use for |
+| --- | --- |
+| `run-ai-dlc` | Lifecycle routing, end-to-end plans, phase/gate selection, and skill handoffs. |
+| `agent-smoke-test` | Agent/workspace readiness and basic guardrail validation. |
+| `maintainer-standup` | Repository status digests, recent commits, PRs, issues, review priorities, stale work, and next actions. |
+| `manage-github-issues` | Issue creation, deduplication, backlog triage, stale-item digests, and issue hygiene without implementing fixes. |
+| `improve-code-health` | Architecture review, safe refactoring, complexity reduction, dependency cleanup, and maintainability improvements. |
+| `create-agent-workflow` | Reusable workflows when a recurring gap is process-level rather than a specialized skill. |
+| `skill-creator` | New or updated skills when a recurring capability gap should become durable agent guidance. |
+
+## Common Workflows
+
+### New feature that needs product clarity
 
 ```text
-agent-smoke-test
+agent-smoke-test, if workspace/agent readiness is unknown
 → create-interactive-prd
 → create-technical-design
 → create-test-strategy
 → create-prd-work-items
 → manage-delivery-board
 → implement-prd-stories
+→ submit-change-request
 → review-pull-request
 → address-pr-review-comments, if reviewers request changes
+→ submit-change-request, to monitor updated CI/CD when needed
 → resolve-merge-conflicts, if needed
-→ check-production-readiness
+→ check-production-readiness, when release-bound
 → release
 → observe-release
 → maintainer-standup / manage-github-issues / improve-code-health
 ```
 
-Important ordering details:
+### Existing issue or bug
 
-- `create-technical-design` runs after PRD approval and before tracker decomposition so stories are based on an intentional architecture.
-- `create-test-strategy` should run before or alongside work-item creation so every story carries acceptance criteria and validation.
-- `create-prd-work-items` owns durable PRD-to-story decomposition; `implement-prd-stories` should not be the primary decomposition skill.
-- `manage-delivery-board` runs before coding sessions to ensure the selected work is truly unblocked.
-- `address-pr-review-comments` runs after review when feedback requires changes, so every reviewer thread gets a disposition before the fix commit is pushed.
-- `observe-release` runs after release to close the loop with production evidence and follow-up items.
+```text
+fix-github-issue, smoke-first when reproduction is unclear
+→ submit-change-request
+→ review-pull-request
+→ address-pr-review-comments, if reviewers request changes
+→ submit-change-request, to monitor updated CI/CD when needed
+→ check-production-readiness, if release-bound
+→ release / observe-release, when shipping
+```
 
-## Skills Added or Updated for AI-DLC
+### Small approved change
 
-### Added skills
+```text
+develop-feature or fix-github-issue
+→ validation
+→ submit-change-request
+→ review-pull-request, if PR/MR path
+→ address-pr-review-comments, if reviewers request changes
+```
 
-- `address-pr-review-comments` — addresses GitHub PR review comments end-to-end: fetches unresolved threads, triages each concern, implements approved fixes, validates, replies on the original threads before pushing, commits, pushes, and summarizes remaining follow-up.
-- `create-technical-design` — converts an approved PRD/spec into an implementation-ready technical design, ADRs, interface contracts, data/migration notes, rollout/rollback plan, observability plan, and risk review.
-- `create-prd-work-items` — converts an approved PRD/design into deduped, cross-repo GitHub/Jira work items with tracker-native relationships and dependency-based priority.
-- `create-test-strategy` — converts requirements, designs, or work items into an acceptance, regression, integration, performance, security, accessibility, and release validation matrix.
-- `manage-delivery-board` — inspects project boards to detect blocked/unblocked work, duplicates, stale items, relationship problems, unclear acceptance criteria, and the next-ready implementation queue.
-- `observe-release` — verifies post-release health, rollout/watch/rollback recommendations, production learning, and follow-up issue capture.
-- `run-ai-dlc` — routes between lifecycle phases, skills, gates, and artifacts so agents choose the right process instead of improvising.
+Use the full PRD/design/work-item path if scope, risk, ambiguity, or dependency complexity grows.
 
-### Updated skills
+### Explicit fast track
 
-- `implement-prd-stories` now implements approved, unblocked tracker/local stories instead of being the primary PRD decomposition skill.
-- `create-interactive-prd` now recommends `create-technical-design` → `create-test-strategy` → `create-prd-work-items` before implementation.
-- `develop-feature`, `manage-github-issues`, `maintainer-standup`, and `release` now route to the new lifecycle skills where appropriate.
+Fast track is a non-default `submit-change-request` path that bypasses PR/MR creation and pushes directly to the repository default branch.
 
-## Skill Importance and Coverage
+Use it only when the user explicitly says a git-context phrase such as "fast track", "bypass PR", "skip pull request", "push directly to main/default", or "commit straight to main". Generic phrases like "push it" or "ship it" are not enough by themselves.
 
-| Skill | AI-DLC role | Why it is important | Typical handoff |
-| --- | --- | --- | --- |
-| `agent-smoke-test` | Phase 0 readiness | Verifies agent/tool behavior before major work and reduces accidental repository damage. | Move to discovery, planning, or direct small-fix work once tools and guardrails are understood. |
-| `create-interactive-prd` | Phase 1 requirements | Provides a strong problem-first PRD workflow that validates user need, scope, success metrics, non-goals, and codebase feasibility before design. | After PRD approval, use `create-technical-design`, `create-test-strategy`, and `create-prd-work-items`. |
-| `create-technical-design` | Phase 2 design | Bridges PRD approval to architecture, contracts, ADRs, data/migration choices, rollout, rollback, observability, security/privacy, and risks. | Use `create-test-strategy`, then `create-prd-work-items`. |
-| `create-test-strategy` | Phase 3 validation planning | Creates the validation matrix and test gates before implementation so quality is designed into each story. | Feed validation into `create-prd-work-items`, `implement-prd-stories`, `review-pull-request`, and `check-production-readiness`. |
-| `create-prd-work-items` | Phase 4 planning | Provides a dedicated PRD-to-GitHub/Jira story creation workflow and uses tracker relationships for dependencies. | Use `manage-delivery-board` to identify next-ready work. |
-| `manage-delivery-board` | Phase 5 delivery planning | Maintains dependency-aware board hygiene and identifies blocked vs. unblocked implementation queues. | Use `implement-prd-stories` for the top approved, unblocked item. |
-| `implement-prd-stories` | Phase 6 implementation | Codes only approved, unblocked work and validates one slice at a time. | Send changes to `review-pull-request`; update tracker/story state when authorized. |
-| `develop-feature` | Phase 6 implementation | Handles smaller approved features outside the formal PRD flow and can route larger PRD work into the full lifecycle. | Validate, then prepare/review PR; use formal AI-DLC when scope grows. |
-| `design-polished-web-ui` | Phase 6 specialty implementation | Improves web UI quality with design artifacts, existing components, visual iteration, responsive checks, copy reduction, and FOSS visual/a11y tooling. | Validate UI changes, then send through review/readiness as appropriate. |
-| `fix-github-issue` | Phase 6 bug/issue implementation | Provides issue-driven bug fixing with reproduction, evidence, and appropriate rigor. | Validate fix, then review/readiness/release as appropriate. |
-| `review-pull-request` | Phase 7 review | Covers adaptive, comprehensive, maintainer, and validation review before merge. | Use `address-pr-review-comments` when reviewers request changes; use readiness checks for release candidates. |
-| `address-pr-review-comments` | Phase 8 review remediation | Closes the loop on PR feedback by fetching unresolved review threads, implementing approved fixes, replying on original threads before push, committing, pushing, and reporting remaining items. | Return to review/readiness once replies are posted and fixes are pushed. |
-| `resolve-merge-conflicts` | Phase 9 integration | Resolves conflicts safely and ensures validation is rerun after integration changes. | Return to review/readiness once conflicts are resolved. |
-| `check-production-readiness` | Phase 10 readiness | Provides a strict fail-closed staged-candidate readiness review with mandatory gate discovery, P0/P1/P2 fixes, performance readiness, baseline handling, and final verdict discipline. | Proceed to `release` only after READY or accepted CONDITIONAL readiness. |
-| `release` | Phase 11 release | Handles gated release preparation and execution: repository state, versions, changelog, approval, commit/tag/release, and optional package distribution. | Use `observe-release` after release or deployment completes. |
-| `observe-release` | Phase 12 observe/learn | Adds the missing post-release health check and feedback loop for metrics, logs, SLOs, incidents, flags, rollback criteria, and follow-up work. | Feed issues to `manage-github-issues`, PRDs to `create-interactive-prd`, technical debt to `improve-code-health`, or hotfixes to `release`. |
-| `maintainer-standup` | Phase 13 maintenance | Produces repository/project digests for status, reviews, issues, stale work, and next actions. | Use `manage-delivery-board` when dependency-aware sequencing is needed. |
-| `manage-github-issues` | Phase 13 backlog | Creates, dedupes, and triages issues; PRD story work belongs in `create-prd-work-items`. | Use `fix-github-issue` for coding; use `create-prd-work-items` for approved PRD story decomposition. |
-| `improve-code-health` | Phase 13 code health | Supports architecture sweeps and safe refactoring paths based on maintainability findings. | Use `create-test-strategy` if validation is weak, then implementation/review/readiness skills. |
-| `create-agent-workflow` | Support | Creates reusable workflows when a gap is process-level rather than tied to a durable skill. | Use when repeated process needs should become a runbook. |
-| `skill-creator` | Support | Creates or updates durable skills when a recurring capability gap should be encoded for future agents. | Use after identifying a missing specialized skill; this may live outside this repository depending on the agent setup. |
-| `run-ai-dlc` | Support/meta | Provides the lifecycle router and gate map for choosing the right skill, artifact, and next step. | Hands off to the phase-specific skill. |
-| `remotion-generate` | Specialty implementation | Supports domain-specific Remotion video generation outside the general AI-DLC. | Use when the implementation domain is Remotion composition generation. |
+Fast track still requires:
+
+- exact intended diff and commit set
+- known default branch
+- repository policy allowing direct push
+- passing validation or explicit named waivers
+- no force push or history rewrite
+- default-branch CI/CD monitoring after push
+- readiness/release/observation handoff when production-bound
+
+### Backlog, maintenance, and code health
+
+```text
+maintainer-standup
+→ manage-delivery-board, when sequencing or dependency readiness matters
+→ manage-github-issues, create-prd-work-items, improve-code-health, or implementation skills
+```
+
+For refactors or technical debt:
+
+```text
+improve-code-health
+→ create-test-strategy, if validation is weak
+→ develop-feature or implement-prd-stories, for approved changes
+→ submit-change-request
+→ review/readiness/release as appropriate
+```
+
+## Gate Checklist
+
+Before moving between phases, verify the relevant gate:
+
+- **Workspace gate:** tools work, repository state is understood, and safety constraints are clear.
+- **PRD gate:** problem, users, evidence, success metrics, non-goals, open questions, and technical claims are documented and approved.
+- **Design gate:** architecture, contracts, data, migrations, rollout, rollback, observability, security/privacy, and risks are addressed.
+- **Test strategy gate:** requirements and risks map to acceptance criteria, commands, data, environments, nonfunctional checks, and release gates.
+- **Tracker gate:** work items are deduped, owned by repo/system, small enough to implement, linked with relationships, and include validation.
+- **Board readiness gate:** the next item has no unresolved blockers and has acceptance criteria plus validation.
+- **Implementation gate:** each slice is implemented and validated before moving to the next slice.
+- **Change request gate:** intended diff is committed and pushed; PR/MR exists unless explicit fast-track direct-to-default was requested and completed; required CI/CD checks are passing, explicitly waived, or clearly triaged with evidence.
+- **Review gate:** PR/MR findings are documented and dispositioned by an owner.
+- **Review remediation gate:** actionable review threads have replies on the original threads, fixes are validated, and the update commit is pushed; use `submit-change-request` to recheck CI/CD when needed.
+- **Integration gate:** conflicts are resolved and validation is rerun.
+- **Production gate:** mandatory build/test/security/performance/external gates are known and passed or explicitly waived.
+- **Observation gate:** release health, rollout decision, incidents, missing telemetry, and follow-up work are recorded.
+- **Feedback gate:** learnings are triaged into issues, PRDs, code-health work, or future releases.
 
 ## Tracker Guidance for PRD Stories
 
@@ -152,60 +249,6 @@ For PRD decomposition into GitHub Projects or Jira:
 
 This guidance matters because labels and issue-body prose are easy for agents to misread. Tracker-native relationships let board tooling and AI agents agree on the actual dependency graph.
 
-## Gate Checklist
-
-Before moving between phases, verify the relevant gate:
-
-- **Workspace gate:** tools work, repository state is understood, and safety constraints are clear.
-- **PRD gate:** problem, users, evidence, success metrics, non-goals, open questions, and technical claims are documented and approved.
-- **Design gate:** architecture, contracts, data, migrations, rollout, rollback, observability, security/privacy, and risks are addressed.
-- **Test strategy gate:** requirements and risks map to acceptance criteria, commands, data, environments, nonfunctional checks, and release gates.
-- **Tracker gate:** work items are deduped, owned by repo/system, small enough to implement, linked with relationships, and include validation.
-- **Board readiness gate:** the next item has no unresolved blockers and has acceptance criteria plus validation.
-- **Implementation gate:** each slice is implemented and validated before moving to the next slice.
-- **Review gate:** PR findings are documented and dispositioned by an owner.
-- **Review remediation gate:** actionable review threads have replies on the original threads, fixes are validated, and the update commit is pushed.
-- **Integration gate:** conflicts are resolved and validation is rerun.
-- **Production gate:** mandatory build/test/security/performance/external gates are known and passed or explicitly waived.
-- **Observation gate:** release health, rollout decision, incidents, missing telemetry, and follow-up work are recorded.
-- **Feedback gate:** learnings are triaged into issues, PRDs, code-health work, or future releases.
-
-## Common Routing Patterns
-
-### New feature idea
-
-Use the full lifecycle:
-
-```text
-create-interactive-prd
-→ create-technical-design
-→ create-test-strategy
-→ create-prd-work-items
-→ manage-delivery-board
-→ implement-prd-stories
-→ review-pull-request
-→ address-pr-review-comments, if reviewers request changes
-→ check-production-readiness
-→ release
-→ observe-release
-```
-
-### Existing issue or bug
-
-Use `fix-github-issue` in smoke-first mode when reproduction is unclear, then `review-pull-request`, `address-pr-review-comments` if reviewers request changes, `check-production-readiness` if the fix is part of a release candidate, and `release`/`observe-release` when shipping.
-
-### Small approved change
-
-Use `develop-feature` or `fix-github-issue`, validate the change, then use `review-pull-request` and `address-pr-review-comments` as appropriate. Escalate to the full PRD/design/work-item path if scope or risk grows.
-
-### Backlog or project maintenance
-
-Use `maintainer-standup` for a digest, `manage-delivery-board` for blocked/unblocked sequencing, and `manage-github-issues` or `create-prd-work-items` for follow-up creation or cleanup.
-
-### Refactor or technical debt
-
-Use `improve-code-health`; add `create-test-strategy` if validation is weak; then use `develop-feature` or `implement-prd-stories` for approved changes, followed by review and readiness gates.
-
 ## Documentation Outputs
 
 Generated documentation should be written under the repository-root `docs/` directory, not under `.pi/`, `.agents/`, `.codex/`, `.claude/`, or other agent-specific state directories.
@@ -217,7 +260,11 @@ Common output locations:
 - Test strategies: `docs/test-strategies/{feature}.md`
 - PRD work-item drafts/reports: `docs/prd-work-items/{feature}.md`
 - Delivery-board reports: `docs/delivery-board/{project-or-date}.md`
+- Feature plans: `docs/develop-feature/{slug}/implementation-plan.md`
+- GitHub issue findings: `docs/github-issues/{issue}/findings.md`
 - Implementation notes: `docs/implement-prd-stories/{story}.md`
+- Change-request submission notes: `docs/submit-change-request/{pr-or-branch}.md`
+- PR review reports: `docs/review-pull-request/{pr-number}.md`
 - PR review-response notes: `docs/address-pr-review-comments/{pr-number}.md`
 - Release notes or release scratchpads: `docs/release/{version}.md`
 - Release observations: `docs/release-observations/{version-or-date}.md`
@@ -229,3 +276,18 @@ If none of the existing skills match the needed phase, do not bury a new process
 
 - Use `create-agent-workflow` for a reusable but non-skill-specific runbook.
 - Use `skill-creator` for a new specialized skill with triggers, workflow, gates, and references.
+
+## Research Basis and Further Reading
+
+This documentation is grounded in SDLC and AI-delivery research discovered through SearXNG and then adapted to this repository's skill set:
+
+- IBM, [What is the Software Development Lifecycle (SDLC)?](https://www.ibm.com/think/topics/sdlc) — SDLC as a structured and iterative way to build, deploy, and maintain software.
+- Atlassian, [Software development life cycle](https://www.atlassian.com/agile/software-development/sdlc) — common SDLC phases and methodology variants.
+- Agile Manifesto, [Manifesto for Agile Software Development](https://agilemanifesto.org/) — working software, customer collaboration, and responding to change.
+- Red Hat, [What is CI/CD?](https://www.redhat.com/en/topics/devops/what-is-ci-cd) — CI/CD as a way to streamline and accelerate the software development lifecycle.
+- DORA, [Capabilities catalog](https://dora.dev/capabilities/) — research-backed capabilities that improve software delivery and operations performance.
+- NIST, [Secure Software Development Framework](https://csrc.nist.gov/projects/ssdf) — secure development practices across the software lifecycle.
+- NIST, [AI Risk Management Framework](https://www.nist.gov/itl/ai-risk-management-framework) — governance, mapping, measurement, and management of AI risk.
+- IBM, [What is the AI lifecycle?](https://www.ibm.com/think/topics/ai-lifecycle) and Palo Alto Networks, [AI development lifecycle](https://www.paloaltonetworks.com/cyberpedia/ai-development-lifecycle) — iterative AI system planning, development, deployment, monitoring, and improvement.
+- AWS DevOps Blog, [AI-Driven Development Life Cycle](https://aws.amazon.com/blogs/devops/ai-driven-development-life-cycle/) — AI-assisted software delivery with human oversight and structured workflow.
+- Google SRE, [Site Reliability Engineering](https://sre.google/sre-book/table-of-contents/) — monitoring, release engineering, incident response, and production learning.
