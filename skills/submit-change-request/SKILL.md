@@ -32,18 +32,20 @@ Read `references/workflow.md`, then choose the smallest safe mode:
 
 1. Identify the repository, remote provider, default/base branch, head branch, related issue/story/PRD, and whether a PR/MR already exists.
 2. Select the mode. Default to PR/MR submission unless explicit fast-track wording is present.
-3. Inspect local git state and intended diff. Separate unrelated edits, detect secrets/debug residue, and confirm all intended changes are staged or ready to stage.
-4. Verify local validation. Run missing pre-submit checks when practical, or record why the PR/MR must be draft/WIP or why fast track is blocked.
-5. Present the commit/submission plan and wait for approval unless the user has explicitly authorized this exact workflow in the current run.
-6. Commit only intended changes using the repository's message conventions and issue references.
-7. For normal PR/MR modes: push safely to the correct remote branch, create or update the PR/MR, then discover and watch PR/MR-connected CI/CD.
-8. For **fast-track-direct-default**: fetch the remote, verify the exact default branch and direct-push policy, update the local default branch safely, confirm the exact commit(s) to push, push to the default branch without force, then watch default-branch CI/CD for the pushed commit.
-9. Watch automation until it reaches a terminal state or an agreed timeout. Triage failures as product/test, flaky, infrastructure, missing-secret/access, manual-approval, or unknown.
-10. Report the PR/MR URL or direct-push target, commits, validation, CI/CD status, blockers, and next recommended skill.
+3. For **ci-monitor-only**: do not stage, commit, push, or create/update a PR/MR. Identify the existing PR/MR, branch, or commit, discover connected CI/CD, watch automation, report, and stop.
+4. For **draft-only**: do not stage, commit, push, or create/update a PR/MR. Inspect context read-only as needed, draft the PR/MR title/body or command plan, report, and stop.
+5. For mutating submission modes only (`new-change-request`, `update-existing-change-request`, `fast-track-direct-default`): inspect local git state and intended diff. Separate unrelated edits, detect secrets/debug residue, and confirm all intended changes are staged or ready to stage.
+6. Verify local validation for mutating submission modes. Run missing pre-submit checks when practical, or record why the PR/MR must be draft/WIP or why fast track is blocked.
+7. Present the commit/submission plan and wait for approval unless the user has explicitly authorized this exact workflow in the current run.
+8. Commit only intended changes using the repository's message conventions and issue references, but only for mutating submission modes.
+9. For normal PR/MR modes: push safely to the correct remote branch, create or update the PR/MR, then discover and watch PR/MR-connected CI/CD.
+10. For **fast-track-direct-default**: fetch the remote, verify the exact default branch and direct-push policy, update the local default branch safely, confirm the exact commit(s) to push, push to the default branch without force, then watch default-branch CI/CD for the pushed commit.
+11. For modes with automation monitoring (`new-change-request`, `update-existing-change-request`, `ci-monitor-only`, `fast-track-direct-default`), watch automation until it reaches a terminal state or an agreed timeout. Triage failures as product/test, flaky, infrastructure, missing-secret/access, manual-approval, or unknown.
+12. Report the PR/MR URL or direct-push target, commits or N/A, validation or N/A, CI/CD status or N/A, blockers, and next recommended skill.
 
 ## Gates
 
-- **Submission gate**: intended diff is understood, local validation is passing or explicitly disclosed, commit exists, and either a PR/MR is created/updated or an explicitly requested fast-track commit is pushed to the default branch.
+- **Submission gate**: for mutating submission modes, intended diff is understood, local validation is passing or explicitly disclosed, commit exists, and either a PR/MR is created/updated or an explicitly requested fast-track commit is pushed to the default branch. For `ci-monitor-only` and `draft-only`, this gate is explicitly not applicable because those modes must not mutate repository or remote state.
 - **Fast-track gate**: direct-to-default push is allowed only when explicit fast-track intent is present, the default branch is unambiguous, repository policy permits direct pushes, the pushed commit set is exactly intended, no unrelated changes are included, force-push is not needed, and validation is passing or explicitly waived with named risk.
 - **Automation gate**: every required PR/MR or default-branch check is passing, explicitly waived, or named as failed/blocked with evidence and owner action.
 

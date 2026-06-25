@@ -41,6 +41,18 @@ Fast-track trigger phrases include:
 
 Do **not** treat generic phrases like "push it", "ship it", "submit it", "looks good", or "get it out" as fast-track authorization by themselves. If the intent could mean either "open/update a PR" or "push to default", ask.
 
+Mode routing:
+
+| Mode | Mutates repository or remote? | Commit/push/create behavior |
+| --- | --- | --- |
+| `new-change-request` | Yes | May stage/commit intended changes, push branch, create PR/MR, and monitor CI/CD. |
+| `update-existing-change-request` | Yes | May stage/commit intended changes, push existing branch, update PR/MR, and monitor CI/CD. |
+| `fast-track-direct-default` | Yes | May stage/commit intended changes and push directly to default only after explicit fast-track gates pass. |
+| `ci-monitor-only` | No | Skip staging, commits, pushes, and PR/MR creation/update; only inspect existing PR/MR/branch/commit status and monitor CI/CD. |
+| `draft-only` | No | Skip staging, commits, pushes, and PR/MR creation/update; only prepare title/body or command plan. |
+
+After selecting `ci-monitor-only`, skip all commit/submission sections and use only CI/CD discovery, monitoring, and reporting. After selecting `draft-only`, skip all commit/push/create/monitor steps and produce the draft output/report only.
+
 ## 3. Discover Repository and Provider Conventions
 
 Use local repo files and available tools to determine:
@@ -65,7 +77,11 @@ Inspect:
 - untracked/generated artifacts
 - secrets, debug logs, temporary flags, commented-out code, local-only paths, and unrelated edits
 
-Stage only intended files. If unrelated changes exist, leave them unstaged or ask whether to split them. If the branch is behind base and integration is required, fetch and use the repo's preferred merge/rebase strategy; route conflicts to `resolve-merge-conflicts`.
+For `ci-monitor-only`, do not stage or alter files; inspect only enough to identify the PR/MR, branch, commit, and relevant automation.
+
+For `draft-only`, inspect diffs and context read-only when useful for drafting; do not stage, commit, push, or create/update the PR/MR.
+
+For mutating submission modes, stage only intended files. If unrelated changes exist, leave them unstaged or ask whether to split them. If the branch is behind base and integration is required, fetch and use the repo's preferred merge/rebase strategy; route conflicts to `resolve-merge-conflicts`.
 
 For fast track, be stricter: no unrelated changes, no unknown generated artifacts, and no ambiguous commit set may be pushed to the default branch.
 
@@ -77,11 +93,17 @@ Run the smallest repo-appropriate local gate set before submission when possible
 - targeted reproduction or smoke checks for bug fixes
 - UI screenshots/recordings or visual/a11y evidence when relevant
 
+For `ci-monitor-only`, local pre-submit validation is usually out of scope; report existing automation state rather than creating new local validation evidence unless the user requests it.
+
+For `draft-only`, include validation already known from the implementation context, but do not run commands that mutate files unless explicitly authorized.
+
 If validation cannot run because of missing services, secrets, hardware, time, or credentials, disclose the blocked gate in the PR/MR body. Use draft/WIP if the missing gate is material.
 
 For fast track, do not rely on "CI will catch it" for known local failures. Either fix first, get an explicit named waiver for the skipped/failed gate, or refuse fast track and use the PR/MR path.
 
 ## 6. Commit Safely
+
+Use this section only for mutating submission modes: `new-change-request`, `update-existing-change-request`, and `fast-track-direct-default`. Skip it entirely for `ci-monitor-only` and `draft-only`.
 
 Prefer one logical commit unless the repository expects a different structure. Use the repo's message convention and include issue/story references when appropriate.
 
@@ -94,6 +116,8 @@ Before committing:
 Do not amend or squash existing public commits, rewrite branch history, or commit unrelated files without explicit authorization.
 
 ## 7. Normal PR/MR Submission
+
+Use this section only for `new-change-request` and `update-existing-change-request`. For `draft-only`, generate the title/body or command plan but do not push or create/update the PR/MR.
 
 Push to the intended remote branch and set upstream when needed. If the branch already exists remotely:
 
@@ -206,7 +230,7 @@ Do not click deploy approvals, protected-environment approvals, or production pr
 **Base → Head**: {base} ← {branch or commit}
 **Commit(s)**: {sha(s)}
 **Local validation**: {commands and results or blocked/waived gates}
-**Automation state**: PASSING | FAILED | BLOCKED | PENDING/TIMEOUT | UNKNOWN
+**Automation state**: PASSING | FAILED | BLOCKED | PENDING/TIMEOUT | UNKNOWN | N/A
 
 ### CI/CD Checks
 | Check | System | Status | Evidence/URL | Required? | Notes |
