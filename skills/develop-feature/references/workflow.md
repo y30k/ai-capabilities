@@ -19,7 +19,7 @@ When this workflow creates or materially changes an implementation plan, stop be
 4. Present the plan and wait for approval.
 5. Implement approved tasks incrementally.
 6. Run validation.
-7. Summarize diff and draft PR body.
+7. Summarize diff and draft PR body, or hand off to `submit-change-request` when authorized to commit, push, open/update a PR/MR, and watch CI/CD.
 
 ## Path B: Plan to PR
 
@@ -27,7 +27,7 @@ When this workflow creates or materially changes an implementation plan, stop be
 2. Confirm the plan is approved. If not, summarize it and ask before coding.
 3. Implement in dependency order.
 4. Run validation after meaningful milestones.
-5. Draft PR body referencing the plan and completed checks.
+5. Draft PR body referencing the plan and completed checks, or hand off to `submit-change-request` when authorized to commit, push, open/update a PR/MR, and watch CI/CD.
 
 ## Path C: Implement Only
 
@@ -68,4 +68,4 @@ Include:
 - Changed files.
 - Validation commands and results.
 - Remaining risks or follow-ups.
-- PR title/body if requested.
+- PR/MR title/body or `submit-change-request` handoff if requested.

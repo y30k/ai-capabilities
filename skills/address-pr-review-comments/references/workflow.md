@@ -70,24 +70,46 @@ Run the smallest reliable validation first, then broader checks when relevant:
 
 Record exact commands and outcomes. If a check cannot run, explain why and what would be needed.
 
-## 6. Reply Before Push
+## 6. Commit Locally Before Replying
 
-Reply on each original thread before pushing the commit. Use concise, factual language:
+When code changed, create the local commit before posting review-thread replies so each code-fix reply can cite a concrete short SHA. Do not push yet.
+
+Before committing:
+
+```bash
+git status --short
+git diff --check
+git diff
+```
+
+Then commit only intended files:
+
+```bash
+git add <intended files>
+git commit -m "fix: address PR review comments"
+SHORT_SHA="$(git rev-parse --short HEAD)"
+```
+
+When multiple comments are fixed by one commit, reuse the same short SHA. When multiple commits are needed, map each thread to the relevant short SHA. If the disposition is answer-only, stale, duplicate, deferred, or blocked, no commit SHA is required; say why no code commit applies.
+
+## 7. Reply Before Push
+
+Reply on each original thread before pushing the local commit. Use concise, factual language with the specific change made for that comment:
 
 ```text
-Addressed locally by <specific change>. Validation: <command/result>. Pushing this in the next commit.
+Addressed in local commit <short-sha> by <specific change tied to this comment>. Validation: <command/result>. I will push this after replying to the review threads.
 ```
 
 For answers without code changes:
 
 ```text
-Good question — <answer>. I did not change code because <reason>. Validation/context: <evidence>.
+Good question — <answer>. I did not change code because <reason>, so no commit SHA applies. Validation/context: <evidence>.
 ```
 
 For deferred or blocked feedback:
 
 ```text
-I did not change this in this PR because <reason>. Suggested follow-up: <issue/task>, pending owner confirmation.
+I did not change this in this PR because <reason>, so no commit SHA applies. Suggested follow-up: <issue/task>, pending owner confirmation.
 ```
 
 Post a thread reply with GitHub GraphQL:
@@ -105,33 +127,26 @@ Use `gh pr comment <pr> --body '<summary>'` only for top-level feedback or a fin
 
 Do not mark threads resolved unless explicitly authorized. If authorized, only resolve threads after the fix or answer is complete and the reply has been posted.
 
-## 7. Commit and Push
+## 8. Push
 
-Before committing:
-
-```bash
-git status --short
-git diff --check
-git diff
-```
-
-Then commit only intended files:
+After all required thread replies are posted, push the local commit(s):
 
 ```bash
-git add <intended files>
-git commit -m "fix: address PR review comments"
 git push
 ```
 
 If push fails because the branch moved, fetch and inspect before rebasing or merging. Never force-push without explicit authorization.
 
-## 8. Final Report
+If no code changes were needed, skip commit/push and report the answer-only/deferred/blocked dispositions.
+
+## 9. Final Report
 
 Return:
 
-- PR URL and pushed commit hash.
-- Thread replies posted, with URLs if available.
+- PR URL and pushed commit hash or short SHA(s), or note that no code commit was needed.
+- Thread replies posted, with URLs if available, including which short SHA or no-code disposition each reply used.
 - Files changed.
 - Validation commands and results.
+- Current CI/CD status if available, or a `submit-change-request` handoff for update/CI monitoring.
 - Any unresolved, deferred, blocked, or user-decision items.
 - Whether another review pass is recommended.

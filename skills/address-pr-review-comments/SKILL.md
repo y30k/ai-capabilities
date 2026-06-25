@@ -1,7 +1,7 @@
 ---
 name: address-pr-review-comments
 description: |
-  Address pull request review comments end-to-end: fetch unresolved GitHub PR review threads and comments, triage each reviewer concern, implement approved fixes on the PR branch, validate changes, reply on the original review threads with dispositions before pushing, commit, push, and summarize remaining follow-up. Use when the user asks to handle PR review comments, respond to reviewer threads, fix requested changes, resolve review feedback, or update a PR after code review.
+  Address pull request review comments end-to-end: fetch unresolved GitHub PR review threads and comments, triage each reviewer concern, implement approved fixes on the PR branch, validate changes, commit locally when code changes, reply on the original review threads with clear per-comment dispositions including the relevant commit short SHA when possible, push, and summarize remaining follow-up. Use when the user asks to handle PR review comments, respond to reviewer threads, fix requested changes, resolve review feedback, or update a PR after code review.
 ---
 
 # Address PR Review Comments
@@ -23,15 +23,18 @@ Do not use this skill for first-pass PR review; use `review-pull-request`. Do no
 5. Present the plan and wait for approval unless the user already explicitly requested implementation of the exact PR feedback.
 6. Check out the PR branch and implement only high-confidence, in-scope fixes tied to the review comments.
 7. Run targeted validation and any relevant required checks; stop if validation fails or feedback changes scope.
-8. Reply on each original review thread before pushing the commit, with concise disposition and validation evidence. Use a top-level PR comment only for non-thread feedback or a final summary.
-9. Commit only the intended changes, push to the PR branch, then report pushed commit, validation, thread replies, and remaining unresolved items.
+8. Commit only the intended code changes locally before replying when a code fix was made, so replies can cite the relevant short SHA. Do not push yet.
+9. Reply on each original review thread before pushing, with a concise per-comment description of what changed, validation evidence, and the relevant commit short SHA when possible. Use a top-level PR comment only for non-thread feedback or a final summary.
+10. Push to the PR branch, then report pushed commit, validation, thread replies, current CI/CD status if available, and remaining unresolved items. Use `submit-change-request` in update or CI-monitor-only mode when connected automation needs watching after the push.
 
 ## Required Reply Discipline
 
 - Reply to the original review thread whenever the feedback came from a thread.
 - Mention whether the issue was fixed locally, answered without code change, deferred with reason, or blocked.
+- For code fixes, include the relevant commit short SHA when a local commit exists; if no code commit exists, say why no SHA applies.
+- Describe the specific change made for that comment, not just "fixed".
 - Include validation evidence when available.
-- Do not claim a fix was pushed before the push succeeds; say it is addressed locally and being pushed in the next commit.
+- Do not claim a fix was pushed before the push succeeds; say it is addressed in local commit `<short-sha>` and will be pushed after replies.
 - Do not mark threads resolved unless the user explicitly authorizes it and the fix/answer is complete.
 
 ## Documentation Output

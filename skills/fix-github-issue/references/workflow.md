@@ -74,4 +74,4 @@ Return:
 - Changed files.
 - Validation results.
 - Remaining risks.
-- PR body or issue comment if requested.
+- PR/MR title/body, issue comment, or `submit-change-request` handoff if requested.

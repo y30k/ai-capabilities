@@ -2,10 +2,12 @@
 name: develop-feature
 description: |
   Develop software features from an approved idea, existing plan/spec, or app brief
-  through implementation, validation, and optional PR preparation. Use when the user
+  through implementation, validation, and optional PR/MR submission handoff. Use when the user
   asks to build, implement, execute a plan, turn an idea into a PR, or create an
-  application with iterative validation. Not for creating PRDs or requirements; use
-  create-interactive-prd. Not for implementing approved PRDs; use implement-prd-stories.
+  application with iterative validation. For committing, pushing, creating/updating a
+  PR/MR, or monitoring CI/CD after validated code, use submit-change-request. Not for
+  creating PRDs or requirements; use create-interactive-prd. Not for implementing
+  approved PRDs; use implement-prd-stories.
 ---
 
 # Develop Feature
@@ -20,8 +22,8 @@ This skill may create lightweight implementation plans, but those plans are a ga
 
 Read `references/workflow.md`, then choose the smallest useful path:
 
-- **idea-to-PR**: idea → lightweight implementation plan → approval gate → implementation → validation → PR.
-- **plan-to-PR**: existing approved plan/spec → implementation → validation → PR.
+- **idea-to-PR**: idea → lightweight implementation plan → approval gate → implementation → validation → `submit-change-request`.
+- **plan-to-PR**: existing approved plan/spec → implementation → validation → `submit-change-request`.
 - **PRD-to-tracked-delivery**: approved PRD → `create-technical-design` → `create-test-strategy` → `create-prd-work-items` → `manage-delivery-board` → `implement-prd-stories`.
 - **implement-only**: user explicitly asks to implement an already-understood plan without PR ceremony.
 - **guided PIV**: user wants human-in-the-loop plan, implementation, validation, feedback.

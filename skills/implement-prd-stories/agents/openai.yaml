@@ -1,4 +1,4 @@
 interface:
   display_name: "Implement PRD Stories"
-  short_description: "Code unblocked PRD work items"
-  default_prompt: "Use $implement-prd-stories to implement the next approved, unblocked PRD work item with validation."
+  short_description: "Implement and advance PRD stories"
+  default_prompt: "Use $implement-prd-stories to implement the next approved PRD story, advance statuses, and refresh blocked-story readiness."

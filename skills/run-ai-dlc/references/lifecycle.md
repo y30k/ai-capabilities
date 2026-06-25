@@ -10,14 +10,15 @@
 | 3. Test strategy | Map requirements and risks to validation gates | `create-test-strategy` | Validation matrix/gates approved |
 | 4. Work-item decomposition | Create deduped, dependency-linked tracker items with validation | `create-prd-work-items` | Items exist or draft is approved; relationships verified |
 | 5. Delivery board readiness | Identify unblocked, implementation-ready work | `manage-delivery-board` | Next-ready queue has no unresolved blockers |
-| 6. Implementation | Code one approved, unblocked slice at a time | `implement-prd-stories`, `develop-feature`, or `fix-github-issue` | Slice passes story validation |
-| 7. PR review | Review risk, behavior, tests, and maintainability | `review-pull-request` | Findings documented and dispositioned |
-| 8. PR review remediation | Address requested changes and reviewer threads | `address-pr-review-comments` | Thread replies posted; fixes validated and pushed |
-| 9. Integration hygiene | Resolve branch/rebase/merge conflicts safely | `resolve-merge-conflicts` | Conflicts resolved and validation rerun |
-| 10. Production readiness | Fail-closed staged release-candidate review | `check-production-readiness` | READY/CONDITIONALLY READY verdict |
-| 11. Release | Version, changelog, tag, publish, and release | `release` | Release artifact/deploy complete |
-| 12. Observe rollout | Verify production/staging health and capture learnings | `observe-release` | Healthy/watch/block/rollback decision recorded |
-| 13. Feedback and maintenance | Feed issues, tech debt, and product learnings back into backlog | `maintainer-standup`, `manage-github-issues`, `improve-code-health` | Follow-up items triaged |
+| 6. Implementation | Code one approved, unblocked slice at a time; advance story status and refresh blocked-story readiness | `implement-prd-stories`, `develop-feature`, or `fix-github-issue` | Slice passes validation; story status updated; newly unblocked work moved Ready |
+| 7. Change request submission | Commit, push, create/update PR/MR, or explicitly fast-track to default, and watch connected CI/CD | `submit-change-request` | PR/MR exists, or explicit fast-track direct-to-default push is complete; required automation passed or is triaged |
+| 8. PR review | Review risk, behavior, tests, and maintainability; post clear PR/MR feedback when possible | `review-pull-request` | Findings posted or documented and dispositioned |
+| 9. PR review remediation | Address requested changes and reviewer threads with clear dispositions and short SHAs when possible | `address-pr-review-comments` | Thread replies posted; fixes validated and pushed |
+| 10. Integration hygiene | Resolve branch/rebase/merge conflicts safely | `resolve-merge-conflicts` | Conflicts resolved and validation rerun |
+| 11. Production readiness | Fail-closed staged release-candidate review | `check-production-readiness` | READY/CONDITIONALLY READY verdict |
+| 12. Release | Version, changelog, tag, publish, and release | `release` | Release artifact/deploy complete |
+| 13. Observe rollout | Verify production/staging health and capture learnings | `observe-release` | Healthy/watch/block/rollback decision recorded |
+| 14. Feedback and maintenance | Feed issues, tech debt, and product learnings back into backlog | `maintainer-standup`, `manage-github-issues`, `improve-code-health` | Follow-up items triaged |
 
 ## Support Skills
 
@@ -30,15 +31,15 @@
 
 ### New feature idea
 
-`create-interactive-prd` → `create-technical-design` → `create-test-strategy` → `create-prd-work-items` → `manage-delivery-board` → `implement-prd-stories` → `review-pull-request` → `address-pr-review-comments` if reviewers request changes → `check-production-readiness` → `release` → `observe-release`.
+`create-interactive-prd` → `create-technical-design` → `create-test-strategy` → `create-prd-work-items` → `manage-delivery-board` → `implement-prd-stories` → `submit-change-request` → `review-pull-request` → `address-pr-review-comments` if reviewers request changes → `submit-change-request` to monitor updated CI when needed → `check-production-readiness` → `release` → `observe-release`.
 
 ### Existing issue or bug
 
-`fix-github-issue` in smoke-first mode when reproduction is unclear → `review-pull-request` → `address-pr-review-comments` if reviewers request changes → `check-production-readiness` if release candidate → `release`/`observe-release` when shipping.
+`fix-github-issue` in smoke-first mode when reproduction is unclear → `submit-change-request` → `review-pull-request` → `address-pr-review-comments` if reviewers request changes → `submit-change-request` to monitor updated CI when needed → `check-production-readiness` if release candidate → `release`/`observe-release` when shipping.
 
 ### Small approved change
 
-`develop-feature` or `fix-github-issue` → validation → `review-pull-request` → `address-pr-review-comments` if reviewers request changes.
+`develop-feature` or `fix-github-issue` → validation → `submit-change-request` → `review-pull-request` → `address-pr-review-comments` if reviewers request changes.
 
 ### Backlog/project maintenance
 
@@ -46,7 +47,7 @@
 
 ### Refactor/technical debt
 
-`improve-code-health` → `create-test-strategy` if validation is weak → `develop-feature`/`implement-prd-stories` for approved changes → review/review-remediation/readiness.
+`improve-code-health` → `create-test-strategy` if validation is weak → `develop-feature`/`implement-prd-stories` for approved changes → `submit-change-request` → review/review-remediation/readiness.
 
 ## Gate Checklist
 
@@ -58,8 +59,9 @@ Before moving phases, verify:
 - **Tracker gate**: work items are deduped, owned by repo/system, small enough, linked with relationships, and include validation.
 - **Readiness gate**: next item has no unresolved blocker relationships and has acceptance criteria plus validation.
 - **Implementation gate**: each slice validates before moving to the next.
+- **Change request gate**: intended diff is committed and pushed; PR/MR exists unless explicit fast-track direct-to-default was requested and completed; required CI/CD checks are passing, explicitly waived, or clearly triaged.
 - **Review gate**: findings are documented and dispositioned by owner.
-- **Review remediation gate**: reviewer threads have replies, approved fixes are validated, and the update commit is pushed.
+- **Review remediation gate**: reviewer threads have replies with clear dispositions and short SHAs when possible, approved fixes are validated, and the update commit is pushed; use `submit-change-request` to recheck CI/CD when needed.
 - **Production gate**: mandatory tests/build/security/performance/external gates are known and passed/waived.
 - **Observation gate**: release health and follow-up work are recorded.
 

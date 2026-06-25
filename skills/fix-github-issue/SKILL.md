@@ -12,7 +12,7 @@ Use this skill for GitHub issue work. It consolidates standard fixing, smoke-fir
 
 Read `references/workflow.md`, then choose:
 
-- **standard**: classify → investigate/plan → implement → validate → report/PR.
+- **standard**: classify → investigate/plan → implement → validate → report/`submit-change-request` handoff.
 - **smoke-first**: reproduce or create a failing check before implementation.
 - **full-review**: standard + PR-style review lanes + self-fix + simplification.
 - **investigate-only**, **plan-only**, **validate-only** when the user asks for a portion.

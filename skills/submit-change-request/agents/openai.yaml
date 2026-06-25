@@ -1,0 +1,4 @@
+interface:
+  display_name: "Submit Change Request"
+  short_description: "Commit, open PR/MR, and watch CI"
+  default_prompt: "Use $submit-change-request to commit my validated changes, open a PR/MR, and monitor CI/CD."
