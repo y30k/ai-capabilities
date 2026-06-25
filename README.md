@@ -75,7 +75,7 @@ These skills were created from scratch for this repository and related y30k/Cape
 
 Current repository-original skills:
 
-- `address-pr-review-comments` — address GitHub PR review comments end-to-end: fetch unresolved threads, implement approved fixes, validate, reply on original threads before pushing, commit, push, and summarize follow-up.
+- `address-pr-review-comments` — address GitHub PR review comments end-to-end: fetch unresolved threads, implement approved fixes, validate, commit locally, reply on original threads with short SHAs when possible before pushing, push, and summarize follow-up.
 - `check-production-readiness` — strict fail-closed release-candidate review for staged changes, including mandatory gate discovery, P0/P1/P2 fixes, performance readiness, baseline handling, and final READY/NOT READY verdict discipline.
 - `create-technical-design` — approved PRD/spec to implementation-ready technical design, ADRs, contracts, rollout/rollback, observability, and risks.
 - `create-test-strategy` — requirements/design/work items to acceptance, regression, integration, performance, security, accessibility, and release validation matrix.
@@ -104,7 +104,7 @@ Current workflow-inspired skills:
 - `release` — gated release preparation and execution.
 - `remotion-generate` — Remotion composition generation.
 - `resolve-merge-conflicts` — safe merge conflict resolution.
-- `review-pull-request` — adaptive/comprehensive PR review.
+- `review-pull-request` — adaptive/comprehensive PR review that posts clear findings on the PR/MR when possible.
 
 ## Planning vs. Coding Boundaries
 
@@ -119,7 +119,7 @@ Examples:
 - `manage-delivery-board` identifies the next unblocked work item.
 - `implement-prd-stories` starts after work-item approval, implements one validated slice at a time, updates routine story status, and moves newly unblocked stories to ready when blocker relationships are satisfied.
 - `submit-change-request` commits, pushes, creates/updates PRs or MRs, and monitors CI/CD only with authorization; direct-to-default fast track is non-default and requires explicit fast-track/bypass-PR wording.
-- `address-pr-review-comments` replies on PR review threads, implements approved fixes, validates, commits, and pushes only with authorization.
+- `address-pr-review-comments` replies on PR review threads with clear dispositions and short SHAs when possible, implements approved fixes, validates, commits, and pushes only with authorization.
 - `observe-release` verifies health and captures follow-up work after release; it should not rollback or mutate production without explicit authorization.
 
 ## Using These Skills

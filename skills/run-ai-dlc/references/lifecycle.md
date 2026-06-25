@@ -12,8 +12,8 @@
 | 5. Delivery board readiness | Identify unblocked, implementation-ready work | `manage-delivery-board` | Next-ready queue has no unresolved blockers |
 | 6. Implementation | Code one approved, unblocked slice at a time; advance story status and refresh blocked-story readiness | `implement-prd-stories`, `develop-feature`, or `fix-github-issue` | Slice passes validation; story status updated; newly unblocked work moved Ready |
 | 7. Change request submission | Commit, push, create/update PR/MR, or explicitly fast-track to default, and watch connected CI/CD | `submit-change-request` | PR/MR exists, or explicit fast-track direct-to-default push is complete; required automation passed or is triaged |
-| 8. PR review | Review risk, behavior, tests, and maintainability | `review-pull-request` | Findings documented and dispositioned |
-| 9. PR review remediation | Address requested changes and reviewer threads | `address-pr-review-comments` | Thread replies posted; fixes validated and pushed |
+| 8. PR review | Review risk, behavior, tests, and maintainability; post clear PR/MR feedback when possible | `review-pull-request` | Findings posted or documented and dispositioned |
+| 9. PR review remediation | Address requested changes and reviewer threads with clear dispositions and short SHAs when possible | `address-pr-review-comments` | Thread replies posted; fixes validated and pushed |
 | 10. Integration hygiene | Resolve branch/rebase/merge conflicts safely | `resolve-merge-conflicts` | Conflicts resolved and validation rerun |
 | 11. Production readiness | Fail-closed staged release-candidate review | `check-production-readiness` | READY/CONDITIONALLY READY verdict |
 | 12. Release | Version, changelog, tag, publish, and release | `release` | Release artifact/deploy complete |
@@ -61,7 +61,7 @@ Before moving phases, verify:
 - **Implementation gate**: each slice validates before moving to the next.
 - **Change request gate**: intended diff is committed and pushed; PR/MR exists unless explicit fast-track direct-to-default was requested and completed; required CI/CD checks are passing, explicitly waived, or clearly triaged.
 - **Review gate**: findings are documented and dispositioned by owner.
-- **Review remediation gate**: reviewer threads have replies, approved fixes are validated, and the update commit is pushed; use `submit-change-request` to recheck CI/CD when needed.
+- **Review remediation gate**: reviewer threads have replies with clear dispositions and short SHAs when possible, approved fixes are validated, and the update commit is pushed; use `submit-change-request` to recheck CI/CD when needed.
 - **Production gate**: mandatory tests/build/security/performance/external gates are known and passed/waived.
 - **Observation gate**: release health and follow-up work are recorded.
 

@@ -68,8 +68,8 @@ The result is a lifecycle that preserves SDLC rigor while making AI agents usefu
 | 5. Board readiness | Find blocked/unblocked work, duplicates, stale items, relationship problems, and the next implementation-ready queue. | `manage-delivery-board` | Next-ready queue has no unresolved blockers |
 | 6. Implementation | Implement one approved, unblocked tracker/local story or focused fix at a time; advance story status and refresh blocked-story readiness. | `implement-prd-stories`, `develop-feature`, `fix-github-issue`, specialty implementation skills | Slice implemented and validated; story status updated; newly unblocked work moved Ready |
 | 7. Change request submission | Commit intended changes, push, create/update a PR/MR by default, and watch connected CI/CD. Explicit fast-track direct-to-default is a non-default exception. | `submit-change-request` | PR/MR exists, or explicit fast-track push is complete; required automation passed or is triaged |
-| 8. PR review | Review behavior, risk, tests, maintainability, and release impact. | `review-pull-request` | Findings documented and owner disposition clear |
-| 9. PR review remediation | Fetch unresolved review threads, address approved issues, reply on original threads, validate, commit, push, and recheck automation when needed. | `address-pr-review-comments` | Review threads replied to; fixes validated and pushed |
+| 8. PR review | Review behavior, risk, tests, maintainability, and release impact; post clear PR/MR feedback when possible. | `review-pull-request` | Findings posted or documented and owner disposition clear |
+| 9. PR review remediation | Fetch unresolved review threads, address approved issues, validate, commit locally, reply on original threads with short SHAs when possible, push, and recheck automation when needed. | `address-pr-review-comments` | Review threads replied to with clear dispositions; fixes validated and pushed |
 | 10. Integration hygiene | Resolve merge/rebase conflicts safely and rerun validation after integration changes. | `resolve-merge-conflicts` | Conflicts resolved and validation rerun |
 | 11. Production readiness | Run strict fail-closed release-candidate review before exposing changes to users. | `check-production-readiness` | READY/CONDITIONALLY READY verdict |
 | 12. Release | Handle versioning, changelog/release notes, tags, publishing, package distribution, or deployment ceremony. | `release` | Version/tag/publish/deploy complete |
@@ -116,8 +116,8 @@ The result is a lifecycle that preserves SDLC rigor while making AI agents usefu
 
 | Skill | Use for | Typical handoff |
 | --- | --- | --- |
-| `review-pull-request` | Adaptive, comprehensive, maintainer, or validation-focused PR/MR review. | Findings → owner disposition or `address-pr-review-comments` |
-| `address-pr-review-comments` | Existing review threads that need replies, approved fixes, validation, commit, push, and CI/CD recheck. | Updated branch → `submit-change-request` monitor mode or another review pass |
+| `review-pull-request` | Adaptive, comprehensive, maintainer, or validation-focused PR/MR review, posting clear findings on the PR/MR when possible. | Findings → owner disposition or `address-pr-review-comments` |
+| `address-pr-review-comments` | Existing review threads that need replies, approved fixes, validation, local commit short SHA references when possible, push, and CI/CD recheck. | Updated branch → `submit-change-request` monitor mode or another review pass |
 | `resolve-merge-conflicts` | Merge, rebase, cherry-pick, or branch conflicts. | Resolved branch → `submit-change-request` |
 | `check-production-readiness` | Strict staged release-candidate review, mandatory gate discovery, P0/P1/P2 fixes, performance readiness, and final verdict. | READY/CONDITIONALLY READY → `release` |
 | `release` | Versioning, changelog, tag, package publish, deployment ceremony, and release notes. | Release/deploy → `observe-release` |
@@ -229,7 +229,7 @@ Before moving between phases, verify the relevant gate:
 - **Implementation gate:** each slice is implemented and validated before moving to the next slice.
 - **Change request gate:** intended diff is committed and pushed; PR/MR exists unless explicit fast-track direct-to-default was requested and completed; required CI/CD checks are passing, explicitly waived, or clearly triaged with evidence.
 - **Review gate:** PR/MR findings are documented and dispositioned by an owner.
-- **Review remediation gate:** actionable review threads have replies on the original threads, fixes are validated, and the update commit is pushed; use `submit-change-request` to recheck CI/CD when needed.
+- **Review remediation gate:** actionable review threads have replies on the original threads with clear dispositions and short SHAs when possible, fixes are validated, and the update commit is pushed; use `submit-change-request` to recheck CI/CD when needed.
 - **Integration gate:** conflicts are resolved and validation is rerun.
 - **Production gate:** mandatory build/test/security/performance/external gates are known and passed or explicitly waived.
 - **Observation gate:** release health, rollout decision, incidents, missing telemetry, and follow-up work are recorded.
