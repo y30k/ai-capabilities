@@ -260,7 +260,7 @@ Do not click deploy approvals, protected-environment approvals, or production pr
 
 ### CI/CD Checks
 | Check | System | Head OID | Status | Evidence/URL | Required? | Notes |
-| --- | --- | --- | --- | --- | --- |
+| --- | --- | --- | --- | --- | --- | --- |
 
 ### Blockers or Follow-ups
 - {blocker, owner/action, next skill}
