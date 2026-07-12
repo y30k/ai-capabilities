@@ -76,7 +76,7 @@ These skills were created from scratch for this repository and related y30k/Cape
 
 Current repository-original skills:
 
-- `address-pr-review-comments` — process only unresolved GitHub review threads, implement and validate in-scope fixes, stage and commit, reply on each original thread with what changed and why plus commit/validation evidence, push normally, resolve fully addressed threads, and report anything still open; a direct request authorizes this default sequence unless a user or repository policy requires an approval checkpoint.
+- `address-pr-review-comments` — process unresolved GitHub review threads, implement and validate in-scope fixes, stage and commit, reply on each original thread with what changed and why plus commit/validation evidence, push normally, resolve fully addressed threads, then paginate all threads and repeat for newly arrived feedback; a direct request authorizes this default sequence unless a user or repository policy requires an approval checkpoint.
 - `check-production-readiness` — strict fail-closed pre-submission review for the exact staged change, including mandatory gate discovery, authorized P0/P1/P2 fixes, performance readiness, baseline handling, and READY/CONDITIONALLY READY/NOT READY verdict discipline.
 - `create-technical-design` — approved PRD/spec to implementation-ready technical design, ADRs, contracts, rollout/rollback, observability, and risks.
 - `create-test-strategy` — requirements/design/work items to acceptance, regression, integration, performance, security, accessibility, and release validation matrix.
@@ -121,7 +121,7 @@ Examples:
 - `implement-prd-stories` starts after work-item approval, keeps technical changes in the current repository unless explicitly authorized otherwise, stages validated story changes, applies tracker-accurate completion semantics, and performs cross-repository dependency-driven Ready transitions only from verified Done.
 - `check-production-readiness` reviews the exact staged change before initial submission or fast track and hands READY or CONDITIONALLY READY evidence to `submit-change-request`; fast track requires READY.
 - `submit-change-request` commits, pushes, creates/updates PRs or MRs, and monitors CI/CD only with authorization; direct-to-default fast track is non-default and requires explicit fast-track/bypass-PR wording.
-- `address-pr-review-comments` excludes resolved threads, posts traceable what/why/commit/validation replies, implements in-scope fixes, and resolves fully addressed threads after verified delivery; a direct request authorizes staging, commit, replies, normal push, and resolution unless the user or repository policy explicitly requires approval.
+- `address-pr-review-comments` excludes resolved threads from remediation, posts traceable what/why/commit/validation replies, implements in-scope fixes, and resolves fully addressed threads after verified delivery; it reports completion only after a final all-pages query at the exact PR head finds zero unresolved threads, while a direct request authorizes staging, commit, replies, normal push, and resolution unless approval is explicitly required.
 - `observe-release` verifies health and captures follow-up work after release; it should not rollback or mutate production without explicit authorization.
 
 ## Using These Skills

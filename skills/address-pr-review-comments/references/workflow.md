@@ -11,7 +11,8 @@
 7. [Reply on Still-Unresolved Threads](#7-reply-on-still-unresolved-threads)
 8. [Push](#8-push)
 9. [Resolve Fully Addressed Threads](#9-resolve-fully-addressed-threads)
-10. [Final Report](#10-final-report)
+10. [Verify Global Thread Closure](#10-verify-global-thread-closure)
+11. [Final Report](#11-final-report)
 
 ## 1. Discover PR Context
 
@@ -270,9 +271,22 @@ gh api graphql \
 
 Treat a missing thread, API error, or `isResolved != true` response as a failed resolution. Leave it in the unresolved report with the exact error and recovery action; do not claim success from mutation intent alone.
 
-## 10. Final Report
+## 10. Verify Global Thread Closure
 
-Return the PR URL, verified PR head repository/ref/OID, and pushed commit hash or short SHA(s), or note that no code commit was needed. Include this per-thread ledger:
+After resolving the current batch, run a fresh provider query; never reuse the initial worklist response as closure evidence:
+
+1. Refetch the provider-reported PR head OID and bind the closure check to that exact OID. If it differs from local `HEAD`, fetch and inspect it, verify every cited fix commit is an ancestor, and do not claim exact-head completion until the updated head and required validation/automation evidence are coherent.
+2. Rerun the fully paginated `reviewThreads` query from section 2 across every page. Fetch every comments page for each remaining unresolved thread, deduplicate by thread and comment ID, and record the verification time, total thread count, resolved count, and unresolved IDs.
+3. Treat `isOutdated == true` as display context only. An outdated thread with `isResolved == false` is still unresolved.
+4. For every newly arrived unresolved thread not in the prior worklist, read the complete conversation, add it to the worklist, and return to section 3. Apply the same edit, validation, commit/reply/push, and verified-resolution sequence before scanning all pages again.
+5. For an original worklist thread that should be resolution-eligible but remains unresolved, treat the run as failed resolution. Recheck permission and mutation evidence, retry only after the cause is understood, and report the exact provider error if it cannot be completed.
+6. Leave deferred, blocked, disputed, partial, failed-validation, failed-reply, failed-push, and permission-denied threads unresolved, but classify the overall closure gate as `INCOMPLETE` and name the owner action.
+
+The closure loop ends successfully only when a fresh all-pages query for the exact current PR head returns zero unresolved review threads. If pagination, provider access, or head verification fails, the state is unknown and the gate is `INCOMPLETE`; replies, pushes, successful per-thread mutations, or an empty initial worklist do not substitute for this final scan.
+
+## 11. Final Report
+
+Return the PR URL, verified PR head repository/ref/OID, and pushed commit hash or short SHA(s), or note that no code commit was needed. State the global thread-closure gate as `COMPLETE` or `INCOMPLETE`, including the final verification time, total/resolved/unresolved counts, and exact unresolved IDs. Include this per-thread ledger:
 
 | Original thread | Reviewer and concern | Disposition | What changed or was answered, and why | Location | Commit | Validation/evidence | Reply | Verified resolution |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -286,7 +300,8 @@ Include a separate non-thread ledger:
 
 Also include:
 
-- Count of resolved threads excluded before triage and any threads skipped because they became resolved during the run; do not claim those as addressed by this run.
+- Count of resolved threads excluded before triage, newly arrived threads discovered by closure scans, remediation rounds, and any threads skipped because they became resolved during the run; do not claim those as addressed by this run.
+- Final all-pages closure evidence for the exact provider head; never report overall success while any review thread remains unresolved.
 - Files changed and exact validation commands/results.
 - Current CI/CD status if available, or a `submit-change-request` handoff for update/CI monitoring.
 - Every thread intentionally left unresolved, with its blocker, owner action, and next step.

@@ -1,7 +1,7 @@
 ---
 name: address-pr-review-comments
 description: |
-  Address existing GitHub pull request review feedback end-to-end: build a worklist from unresolved threads only, recheck thread state before acting, triage each concern, implement in-scope fixes, validate, stage, commit, post evidence-rich replies, push the PR branch, resolve fully addressed threads, and report anything still unresolved. Treat a direct request to address PR comments as authorization for this default non-force workflow without approval pauses unless the user or repository policy explicitly requires a checkpoint. Use when the user asks to handle reviewer comments, respond to PR review threads, fix requested changes from a review, resolve addressed feedback, or remediate an existing changes-requested review. Use review-pull-request for a first-pass review and submit-change-request for branch updates not driven by existing review feedback.
+  Address existing GitHub pull request review feedback end-to-end: build a worklist from unresolved threads only, recheck thread state before acting, triage each concern, implement in-scope fixes, validate, stage, commit, post evidence-rich replies, push the PR branch, resolve fully addressed threads, then run a final paginated closure scan and process newly arrived unresolved threads before reporting. Treat a direct request to address PR comments as authorization for this default non-force workflow without approval pauses unless the user or repository policy explicitly requires a checkpoint. Use when the user asks to handle reviewer comments, respond to PR review threads, fix requested changes from a review, resolve addressed feedback, or remediate an existing changes-requested review. Use review-pull-request for a first-pass review and submit-change-request for branch updates not driven by existing review feedback.
 ---
 
 # Address PR Review Comments
@@ -18,12 +18,13 @@ Do not use this skill for first-pass PR review; use `review-pull-request`. Do no
 
 ## Procedure
 
-Read and follow `references/workflow.md`. Unless an explicit approval checkpoint applies, the direct request supplies authorization. Preserve the mutation sequence: commit locally, reply on each still-unresolved original thread, push code fixes, resolve each fully addressed thread, then verify resolution.
+Read and follow `references/workflow.md`. Unless an explicit approval checkpoint applies, the direct request supplies authorization. Preserve the mutation sequence: commit locally, reply on each still-unresolved original thread, push code fixes, resolve each fully addressed thread, verify each resolution, then paginate every review thread at the exact current PR head. If new unresolved threads arrived, add them to the worklist and repeat the remediation loop before reporting.
 
 - Treat focused validation plus passing or explicitly waived updated required CI/CD as the readiness confirmation for review remediation; do not invoke a separate final production-readiness phase.
 - In every reply, state the disposition, original concern, what changed or was answered, why that addresses the concern, affected file or symbol when applicable, relevant local commit short SHA or why none applies, and exact validation evidence.
 - Resolve fix threads only after validation, reply, successful push, and proof that each reply-cited SHA is on the PR branch; if reconciliation rewrites a SHA, post a corrective reply naming the pushed replacement first. Resolve answer-only, verified-stale, or duplicate threads only after the explanatory reply is complete. Leave deferred, blocked, disputed, partial, failed-validation, failed-reply, and failed-push threads unresolved.
 - Do not claim a push or resolution succeeded before verifying it.
+- Treat global thread closure as an exit gate, not optional cleanup. Report `COMPLETE` only when a final all-pages provider query for the exact current PR head returns zero unresolved review threads. If any thread remains unresolved because it is new, deferred, blocked, disputed, partial, permission-denied, or failed, report `INCOMPLETE` with its ID and next action; never equate replies, pushes, or outdated diffs with resolution.
 
 ## Documentation Output
 
