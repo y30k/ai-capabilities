@@ -2,15 +2,22 @@
 
 Use this reference when creating or refreshing `DESIGN.md`, `styles.json`/`Styles.json`, or persistent agent instructions for a web UI project.
 
+## Table of Contents
+
+- [Workflow](#workflow)
+- [DESIGN.md Template](#designmd-template)
+- [styles.json Starter Schema](#stylesjson-starter-schema)
+- [AGENTS.md Snippet](#agentsmd-snippet)
+
 ## Workflow
 
 1. Gather source material in priority order:
-   - Existing `DESIGN.md`, style JSON, Tailwind/theme config, CSS variables, component files.
-   - User-provided screenshots, flows, Figma CSS/style exports, brand assets, and product copy.
+   - Current user instructions, acceptance criteria, screenshots, flows, Figma exports, brand assets, and product copy.
+   - Existing `DESIGN.md`, style JSON, Tailwind or theme config, CSS variables, and component files.
    - Existing production UI patterns in the app.
-   - External inspiration notes, only after internal sources are understood.
+   - External inspiration notes, only after user and project sources are understood.
 2. Extract the design language: type scale, color roles, spacing rhythm, radius, elevation, density, layout grid, component anatomy, interaction states, and copy tone.
-3. Normalize values into reusable tokens. Prefer existing token names. If none exist, start with conservative defaults: Inter, Tailwind neutral palette, simple radii, restrained shadows, and Lucide or Phosphor icons.
+3. Normalize values into reusable tokens. Prefer existing token names and installed fonts, icons, components, and palette. If none exist, use conservative system-font, neutral, low-decoration defaults for unspecified choices and ask before adding dependencies.
 4. Write human guidance in `DESIGN.md` and machine-readable tokens in `styles.json`.
 5. If the repo uses `AGENTS.md` or the user asks for persistent guidance, update it to require agents to follow `DESIGN.md` and `styles.json` for UI work.
 
@@ -23,11 +30,13 @@ Use this reference when creating or refreshing `DESIGN.md`, `styles.json`/`Style
 Describe the intended feel in one paragraph: audience, platform, density, tone, and the most important visual principle.
 
 ## Source Order
-1. DESIGN.md
-2. styles.json / existing theme tokens
-3. Provided screenshots, Figma exports, and layout images
-4. Existing app design system and reusable components
+1. Current user instructions and acceptance criteria
+2. User-provided screenshots, Figma exports, and layout images
+3. DESIGN.md and styles.json / existing theme tokens
+4. Existing app design system, reusable components, and nearby product patterns
 5. External inspiration, translated into this product language
+
+Explicit current user direction overrides stale artifacts; resolve material conflicts before implementation.
 
 ## Foundations
 - Typography: font families, scale, weights, line heights, tracking, heading/body usage.
@@ -72,14 +81,14 @@ Preserve an existing schema if present. Otherwise create a compact, versioned ob
     }
   ],
   "defaults": {
-    "fontFamily": "Inter",
-    "icons": "lucide|phosphor",
+    "fontFamily": "project-installed|system-ui|custom",
+    "icons": "project-installed|none|custom",
     "componentLibrary": "existing|shadcn-ui|radix|custom",
     "cssStrategy": "tailwind|css-modules|css-variables|other"
   },
   "tokens": {
     "fontFamily": {
-      "sans": ["Inter", "ui-sans-serif", "system-ui", "sans-serif"]
+      "sans": ["system-ui", "sans-serif"]
     },
     "fontSize": {
       "xs": "0.75rem",

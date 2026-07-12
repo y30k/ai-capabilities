@@ -4,13 +4,13 @@ Use this reference when a user asks how to make high-quality web UI iteration re
 
 ## Minimal Stack
 
-Stand up this first in most repos:
+Start with the smallest subset the project needs, reusing installed tooling and asking before adding dependencies:
 
-- Root design artifacts: `DESIGN.md` plus `styles.json`/`Styles.json`.
-- Persistent agent rules: `AGENTS.md` UI section that requires the design artifacts.
-- Static advisory audit: this skill's `scripts/ui_static_audit.py` in local scripts or CI.
-- Browser screenshots: Playwright Test for deterministic viewport captures.
-- Accessibility smoke checks: `@axe-core/playwright` or `axe-core` where a browser harness exists.
+- Root design artifacts: `DESIGN.md` plus `styles.json`/`Styles.json`, or the project's equivalent sources. For the bundled audit, pass equivalents with `--design-guidance PATH` and `--design-tokens PATH`; use `--skip-artifact-checks` only after explicit project-level review.
+- Persistent agent rules: an `AGENTS.md` UI section when the repository uses that convention.
+- Static advisory audit: this skill's `scripts/ui_static_audit.py` in local scripts or CI after tuning.
+- Browser screenshots: the existing browser harness, or Playwright Test when approved, for deterministic viewport captures.
+- Accessibility smoke checks: the existing accessibility harness, or `@axe-core/playwright`/`axe-core` when approved.
 
 ## Component Workshop
 
@@ -74,7 +74,7 @@ Adapt names to the project package manager:
 ```json
 {
   "scripts": {
-    "ui:audit": "python3 skills/design-polished-web-ui/scripts/ui_static_audit.py --root . app components",
+    "ui:audit": "python3 skills/design-polished-web-ui/scripts/ui_static_audit.py --root . --design-guidance docs/design-system.md --design-tokens tailwind.config.ts app components",
     "test:visual": "playwright test --grep @visual",
     "test:a11y": "playwright test --grep @a11y",
     "storybook": "storybook dev -p 6006",

@@ -2,19 +2,19 @@
 
 ## Table of Contents
 
-1. [Confirm Implementation Source and Autonomy](#1-confirm-implementation-source-and-autonomy)
+1. [Confirm Repository, Source, and Autonomy](#1-confirm-repository-source-and-autonomy)
 2. [Discover Status Schema and Relationships](#2-discover-status-schema-and-relationships)
 3. [Select Ready Work](#3-select-ready-work)
 4. [Verify Readiness](#4-verify-readiness)
 5. [Plan Without Unnecessary Pauses](#5-plan-without-unnecessary-pauses)
 6. [Progress Story Status](#6-progress-story-status)
 7. [Implement and Validate One Story](#7-implement-and-validate-one-story)
-8. [Complete the Story](#8-complete-the-story)
-9. [Blocked-Story Readiness Sweep](#9-blocked-story-readiness-sweep)
+8. [Stage and Mark the Story Done](#8-stage-and-mark-the-story-done)
+9. [Cross-Repository Blocked-Story Readiness Sweep](#9-cross-repository-blocked-story-readiness-sweep)
 10. [Continue or Hand Off](#10-continue-or-hand-off)
 11. [Report](#11-report)
 
-## 1. Confirm Implementation Source and Autonomy
+## 1. Confirm Repository, Source, and Autonomy
 
 Accept these sources, in priority order:
 
@@ -24,34 +24,52 @@ Accept these sources, in priority order:
 4. An approved local story list under `docs/`.
 5. A PRD fallback only when the user explicitly asks for temporary local planning.
 
-For tracker sources, fetch the current item state before coding. For local stories, read the story table and source PRD/design.
+Resolve the current repository root and snapshot its state before selecting work. If no Git root exists, stop because the required local-staging contract cannot be satisfied:
+
+```bash
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+git status --short
+git diff --name-only
+git diff --cached --name-only
+git ls-files --stage
+git diff --cached --binary --full-index
+git write-tree
+```
+
+Treat this root as the only authorized technical mutation boundary by default. If the user explicitly names another repository for technical changes, resolve and snapshot that root too and add only that named root to the authorized set. Do not edit files, run mutating Git commands, create worktrees, or stage changes in any other repository, nested independent repository, submodule, or sibling checkout. Reading tracker data and changing dependency-driven tracker statuses across repository ownership is allowed by this workflow and does not authorize code changes there.
+
+For tracker sources, fetch the current item state before coding. For local stories, read the story table and source PRD/design. Confirm the active story's owning repository maps to the current root; if it does not, stop and ask for explicit cross-repository implementation authorization or a repository change.
 
 If the only input is an approved PRD, ask: "Do you want me to use `create-prd-work-items` to create durable tracker stories first, or draft a local temporary story plan for this session?" Stop until the user chooses.
 
-Treat requests like "continue implementing the PRD", "work through the ready stories", "implement the next unblocked ticket", or "keep making progress" as authorization to proceed through routine implementation/status/update loops without asking after every stage. Ask only when the manual-review triggers in this workflow appear.
+Treat requests such as "continue implementing the PRD" or "implement the next unblocked ticket" as authorization for scoped implementation in the current repository, local staging, the active story's routine In Progress/Done transitions, and dependency-driven Ready transitions across the tracker. Do not infer authorization to commit, push, submit remotely, or edit another repository.
 
 ## 2. Discover Status Schema and Relationships
 
 Before changing tracker/local state, determine:
 
-- status field names and allowed values
-- which statuses mean backlog, blocked, ready, in progress, validation, review/submission, done/accepted, or released
-- whether Done requires code validation only, PR/MR merge, release, or product-owner acceptance
+- status field names, transition IDs, and allowed values
+- the exact statuses that represent Blocked, Ready, In Progress, and Done, including semantic equivalents such as To Do/Next or Closed/Completed
+- whether an issue-only tracker represents Done by closing the issue with a completed reason
 - relationship types for blocks/blocked-by, parent/child, duplicate, related, dependency, or Jira links
+- the active delivery scope and how reverse dependencies are queried across repositories
 - whether comments, audit fields, project fields, labels, milestones, or assignees are expected when statuses change
 
-Do not invent statuses. Map to the closest existing workflow status. If the board has no clear Ready/In Progress/Done semantics, ask or use a local report instead of mutating tracker state.
+For this skill, technical completion means the acceptance criteria pass, required validation passes, and all story-owned changes are staged locally. At that point the active story must move to the discovered Done-equivalent even though PR/MR submission, review, merge, release, and observation occur later in the AI-DLC. If the tracker has no unambiguous Done or Ready mapping, forbids the required transition, or requires an owner-only decision, stop and surface the schema conflict rather than silently substituting another status or claiming completion.
+
+Do not invent statuses or represent dependency truth only with labels/body prose when tracker-native relationships exist. Refetch every changed item to verify its resulting status.
 
 ## 3. Select Ready Work
 
-If the user named a specific item, verify that item first. Otherwise select the highest-priority ready item from the queue using this order:
+If the user named a specific item, verify that item first. Otherwise honor the ready queue's explicit priority or order, but select technical work only when its owning repository is the current repository unless cross-repository implementation was explicitly authorized. When priority is absent or tied, use these tie-breakers:
 
 1. Unblocked foundational work that unlocks downstream stories.
 2. Risk-reducing or contract/schema/API work before dependent UI/integration work.
 3. Small independent stories with clear validation.
 4. Work already assigned to this repo/system and current branch context.
 
-Before declaring that no ready work exists, run the blocked-story readiness sweep in section 9; a completed dependency may have made additional work ready.
+Before declaring that no ready work exists during initial selection, refresh the queue and dependency state read-only or use `manage-delivery-board`; section 9 is reserved for propagation after this run verifies an active story as Done. A cross-repository item may be reported Ready without becoming eligible for implementation in the current run.
 
 ## 4. Verify Readiness
 
@@ -59,7 +77,7 @@ A story is ready only when:
 
 - it is approved for implementation
 - it is not blocked by any open tracker relationship or local dependency
-- the owning repo/system matches the current task or the user explicitly asks for cross-repo work
+- the owning repository maps to the current repository root, or the user explicitly authorizes technical changes in the other named repository
 - acceptance criteria are observable and testable
 - validation commands/checks are known or a practical fallback is agreed
 - required design/PRD context is linked or available
@@ -67,7 +85,7 @@ A story is ready only when:
 
 Do not treat labels/tags or prose mentions as sufficient blocker truth when tracker relationships exist.
 
-If readiness is unclear, use `manage-delivery-board` or ask the user instead of coding.
+If readiness or repository ownership is unclear, use `manage-delivery-board` or ask the user instead of coding. Never treat permission to update a cross-repository story's tracker status as permission to implement that story outside the current repository.
 
 ## 5. Plan Without Unnecessary Pauses
 
@@ -77,12 +95,18 @@ For the selected story, read the source PRD/design/work item and relevant code. 
 ## Implementation Plan
 
 **Story**: {tracker ref or local ID}
+**Current repository root**: {absolute root and remote identity}
+**Explicitly authorized additional technical roots**: {none or named roots + authorization}
+**Tracker scope**: {project/board/epic/dependency graph across repositories}
+**Status mapping**: {Blocked / Ready / In Progress / Done equivalents}
 **Why ready**: {relationship/dependency evidence}
 **Scope**: {one-slice summary}
-**Files likely touched**: {paths}
+**Files likely touched**: {paths inside the current root or explicitly authorized additional roots}
+**Pre-existing worktree/index state**: {unrelated state to preserve}
 **Acceptance criteria**: {criteria}
 **Validation**: {commands/manual checks}
-**Out of scope**: {non-goals and related blocked work}
+**Staging plan**: {story-owned files/hunks only}
+**Out of scope**: {all non-authorized repository edits, non-goals, and related blocked work}
 ```
 
 If the user already authorized this exact story, ready queue, or PRD implementation run, do not pause for another approval unless the plan changes scope or introduces a manual-review trigger. If authorization is missing, ask before source-code edits.
@@ -92,81 +116,84 @@ Manual review is required before:
 - implementing a blocked or dependent item
 - changing requirements, non-goals, acceptance criteria, or story scope
 - broad refactors not required by the story
-- touching another repo/system not authorized for this run
+- editing files, Git state, worktrees, submodules, or generated artifacts in another repository not explicitly authorized for technical changes
 - weakening, deleting, or bypassing validation to make the story pass
 - creating new tracker items or changing contentious ownership/priority without approval
-- closing, deleting, reassigning, or resolving contentious tracker items
+- closing, deleting, reassigning, or resolving unrelated/contentious tracker items beyond the active story's required Done transition
 - using credentials, external services, paid resources, production systems, or signoffs not already authorized
 - continuing after a failure whose repair would change scope or create product/owner decisions
 
 ## 6. Progress Story Status
 
-Stage progression is part of this skill, not optional cleanup.
+Status progression is part of the implementation contract, not optional cleanup. Implementation authorization includes routine transitions for the active story and dependency-driven Ready transitions discovered in section 9.
 
-When tracker/local mutations are authorized for the run:
+1. Move the selected story from Ready/To Do to In Progress/Doing/Active before source-code edits when the workflow supports it; refetch to verify.
+2. Add a short implementation-started note when the tracker convention expects one, including the current repository/branch and intended validation.
+3. Do not move the story to Done during intermediate validation. Section 8 owns the final transition after validation and staging succeed.
+4. On blocked or failed work, set the appropriate Blocked/Failed equivalent only with evidence and an exact next action; do not stage incomplete changes as a completed story or run the unblocking sweep.
 
-1. Move the selected story from Ready/To Do to In Progress/Doing/Active before source-code edits when the workflow supports it.
-2. Add a short note when helpful: implementation started, branch if known, and intended validation.
-3. During validation, use the board's Validation/Review/Ready for Review status only if that status exists and matches repo convention.
-4. On pass, move to Done only if the story definition of done is satisfied. If Done requires PR/MR merge, release, or owner acceptance, move to Implemented/Ready for Review/Validation Passed instead.
-5. On blocked or failed, set Blocked/Failed only with evidence and exact next action.
-
-For local story files, update the local status table and preserve dates, evidence, and dependency notes.
+For approved local story tables in the current repository, apply equivalent status updates in that file and include them in the story's staged changes. A local status file in another repository remains outside the mutation boundary unless explicitly authorized.
 
 ## 7. Implement and Validate One Story
 
-1. Re-read relevant code and tests.
-2. Make the smallest change that satisfies the story.
-3. Add/update tests when appropriate for the story's validation plan.
-4. Run targeted validation first.
-5. Run broader required checks if the story affects shared contracts, schemas, build paths, permissions, performance-sensitive paths, or risky behavior.
-6. If validation fails because of an implementation mistake, attempt a bounded self-repair and rerun validation.
-7. Mark the story `pass`, `blocked`, or `failed` with evidence.
+1. Re-read relevant code and tests inside the recorded repository root.
+2. Make the smallest change that satisfies the story. Before every file write or generated output, ensure its resolved path remains inside the current root or an explicitly authorized additional root and does not enter any other nested independent repository or submodule.
+3. Add or update tests for changed behavior; if automation is infeasible, document why and define a concrete manual check.
+4. Run targeted validation first and map results to every acceptance criterion.
+5. Run broader required checks when shared contracts, schemas, builds, permissions, performance-sensitive paths, or risky behavior are affected.
+6. Inspect the final unstaged and staged diffs against the initial snapshot; separate story-owned hunks from unrelated pre-existing work.
+7. For implementation-caused failures, repair only within the authorized story scope and rerun affected checks; otherwise stop for manual review.
+8. Classify the technical outcome as `pass`, `blocked`, or `failed` with acceptance and command evidence. Only `pass` proceeds to staging and Done.
 
-Do not continue to another story after failed validation unless the next story is independent and safe, or the user requested continuous progress and the failure is recorded as blocked/failed without contaminating the next item.
+Do not continue to another story after failed validation unless the next story is independent, belongs to the current repository, and the user requested continuous progress. Preserve failed work separately so it cannot contaminate the next story's staged completion evidence.
 
-## 8. Complete the Story
+## 8. Stage and Mark the Story Done
 
-When validation passes:
+A story is technically complete only when its acceptance criteria and required validation pass, its intended repository changes are staged, and its Done transition is verified. Use this order:
 
-- update status according to the discovered schema
-- record validation commands and outcomes
-- list changed files and behavior summary
-- link branch/commit/PR/MR if available
-- record any discovered follow-ups without expanding the current scope
-- preserve newly discovered blockers using tracker-native relationships when the target item already exists and relationship updates are authorized
+1. In each authorized repository actually touched, inventory the story-owned files and hunks against its pre-implementation snapshot. Exclude unrelated pre-existing changes. If any story path already contains pre-existing staged content, stop and obtain an explicit separation plan before staging; do not attempt to prove preservation by comparing serialized patch bytes after modifying the same index blob.
+2. Stage only story-owned files or hunks. Use path-limited staging when a file is story-only; use interactive or patch-based index staging when story and unrelated unstaged hunks share a file.
+3. Inspect the staged story diff and run the staged-diff hygiene check in each touched authorized repository:
 
-Do not encode blockers only as labels if relationship links are available.
+```bash
+git diff --cached --check
+git diff --cached --name-only
+git diff --cached --stat
+```
 
-If `submit-change-request` is needed to create a PR/MR before Done is allowed, mark the story as Implemented/Ready for Review and hand off rather than pretending it is Done.
+4. Verify every intended story hunk is staged and no unrelated hunk was newly added to the index. Compare `git ls-files --stage` mode/blob entries for every unrelated pre-existing staged path with the baseline and inspect cached patches for ownership; do not require byte-identical serialized diff text, whose context can change. Record the resulting staged tree ID.
+5. Move the active tracker item to the discovered Done-equivalent. For an issue-only tracker, close it as completed when closure is the discovered Done mapping. Attach the repository, staged-file list, acceptance results, and validation evidence when supported.
+6. Refetch the item and verify its status is Done. If a local story table in the current repository is the tracker, update its status/evidence to Done, stage only that tracking-file hunk, and repeat the staged-diff checks.
+7. Record follow-ups without expanding scope. Preserve dependency relationships; do not delete historical blocker links merely because they are now satisfied.
 
-## 9. Blocked-Story Readiness Sweep
+Do not commit or push. If story-owned changes cannot be isolated and staged, or if the Done mutation/refetch fails, report `technical-pass/staging-failed` or `technical-pass/done-transition-failed`; do not claim the story is complete and do not run the dependency-unblocking sweep. PR/MR submission, review, merge, release, and observation remain later lifecycle work even though the technically completed story is now Done.
 
-After each completed/implemented story, review blocked work tied to the same PRD, epic, parent issue, project, milestone, or local story group.
+## 9. Cross-Repository Blocked-Story Readiness Sweep
 
-For each blocked story:
+Run this sweep only after the active story's Done status is verified. Enumerate blocked stories across the active tracker/delivery scope, not merely the current repository or the completed item's forward links, then identify every item whose readiness may have changed because its blocker set includes the newly Done story. Check reverse `blocks` relationships, `blocked by` links, Jira dependency links, parent/child gates, and blocked items in the active PRD/epic/project. Do not filter candidates by repository; a story owned by another repository must still be evaluated and moved to Ready when eligible.
 
-1. Fetch current relationship state.
-2. List every blocker relationship or local dependency.
-3. Mark each blocker as satisfied only when it is done/closed/accepted/merged/released according to its own definition, or explicitly waived.
-4. Confirm the candidate story still has clear acceptance criteria, owner repo/system, design/test links, and available required environments/secrets/signoffs.
-5. If all blockers are satisfied and the story is otherwise ready, move it from Blocked to Ready/To Do/Next according to the board schema.
-6. Add a concise comment or local note: what unblocked it, which blockers were satisfied, and validation/design context to use next.
-7. Leave still-blocked stories blocked with the exact remaining blockers and needed action.
+For each candidate blocked story:
 
-Do not remove historical dependency relationships unless the tracker convention requires it. Prefer adding a readiness comment/status update over deleting useful dependency history.
+1. Fetch its current status, owning repository/system, complete tracker-native blocker set, and non-dependency readiness gates.
+2. Mark a blocker satisfied only when its current tracker state is Done/Closed/Accepted or it has an explicit recorded waiver. The newly completed story is one satisfied blocker, not proof that all blockers are satisfied.
+3. Confirm no independent readiness blocker remains: acceptance criteria are actionable, owner repository/system is known, required design/test inputs exist, and required environments, secrets, or signoffs are available or not needed.
+4. If every blocker and readiness gate is satisfied, move the story from Blocked to the discovered Ready-equivalent even when its owning repository differs from the current repository.
+5. Refetch the story and verify Ready. When supported, add concise evidence naming the completed dependency and the remaining satisfied/waived blocker set. If the active tracker is a local file in an authorized repository, stage only each verified Ready status/evidence hunk and rerun the staged-diff checks.
+6. Leave every ineligible story Blocked and report its exact remaining blocker or readiness gap. Do not change its priority, assignee, scope, or repository ownership merely to make it ready.
 
-If readiness updates require owner judgment, contentious priority changes, cross-team reassignment, or new work-item creation, record proposed updates and ask instead of mutating.
+Cross-repository tracker status mutation is required here; cross-repository file, branch, worktree, index, commit, or source mutation is forbidden without explicit authorization. If the tracker record is a local file stored only in another repository, report that it requires cross-repository file authorization rather than editing it silently.
+
+Do not remove historical dependency relationships unless tracker policy explicitly requires it. If any required Ready transition fails or cannot be verified, preserve the active story's staged changes and verified Done state, report the exact item, repository, attempted mapping, and permission/schema error, and stop the run. Do not claim the item was unblocked or implement another story until the sweep succeeds or an owner resolves the tracker failure.
 
 ## 10. Continue or Hand Off
 
-After the blocked-story sweep:
+After the cross-repository blocked-story sweep, continue only when every required Ready transition was verified or no item qualified for transition:
 
-- If the user asked for one story only, stop after the report and name the next ready item if known.
-- If the user asked to continue the feature/PRD queue and another ready story exists, select the next ready story and loop from section 4 without another approval pause.
-- If no ready work remains, report blocked items and the smallest action that would unblock progress.
-- When validated work is ready for remote review, use `submit-change-request` for commit/push/PR/MR creation and CI/CD monitoring.
-- Use `manage-delivery-board` when board state is too ambiguous to safely update or select next work.
+- If the user asked for one story only, stop after the report and name every newly Ready item relevant to the delivery graph.
+- If the user asked to continue the feature/PRD queue, select another Ready story without another approval pause only when its technical owner is the current repository. A story moved to Ready in another repository must be reported and skipped until the user explicitly authorizes technical work there or starts a run in that repository.
+- If no implementable current-repository work remains, report blocked items, newly Ready cross-repository items, and the smallest next action.
+- Treat each technical repository touched as a separate candidate with its own source commit, staged tree ID, complete index, readiness run, and submission handoff. Invoke `check-production-readiness` separately in every touched root. If unrelated pre-existing staged entries remain in a root, preserve them and stop for a separation/inclusion decision rather than misrepresenting that index; do not unstage them silently. Record one verdict per repository and use `submit-change-request` separately after each READY or CONDITIONALLY READY result.
+- Use `manage-delivery-board` when relationship or status state is too ambiguous to transition safely.
 - Use `create-prd-work-items` when missing dependency work needs durable tracker items.
 
 ## 11. Report
@@ -175,29 +202,40 @@ After the blocked-story sweep:
 ## PRD Story Implementation Report
 
 **Source**: {tracker/project/PRD/local plan}
+**Current repository**: {absolute root and remote identity}
 **Story completed**: {ref/title}
-**Status**: pass | blocked | failed | implemented-ready-for-review | done
+**Technical outcome**: done | blocked | failed | technical-pass/staging-failed | technical-pass/done-transition-failed
+**Done verification**: {refetched status/evidence or failure}
 
-### Changed Files
-- `{path}` — {summary}
+### Staged Story Changes
+| Path/hunk | Story purpose | Staged verification |
+| --- | --- | --- |
+
+- Pre-existing index state preserved: {yes/no + explanation}
+- Unstaged story-owned hunks remaining: {none or exact list}
+- Changes made outside current repository: {none, or explicitly authorized repo and evidence}
 
 ### Validation Summary
 - `{command}` — {pass/fail/not run and why}
 
-### Story Stage Updates
-| Story | From | To | Evidence |
-| --- | --- | --- | --- |
+### Active Story Status
+| Story | Repository | From | To | Verification |
+| --- | --- | --- | --- | --- |
 
-### Blocked-Story Readiness Sweep
-| Story | Previous blockers | Current status | Action taken |
-| --- | --- | --- | --- |
+### Cross-Repository Blocked-Story Readiness Sweep
+| Story | Owning repository | Previous blockers | Remaining blockers/gates | From → To | Verification/action |
+| --- | --- | --- | --- | --- | --- |
 
-### Tracker Updates
-- {items/relationships/statuses updated or not authorized}
+### Per-Repository Readiness Handoff
+| Repository root | Source commit | Staged tree ID | Candidate files | Readiness verdict/handoff |
+| --- | --- | --- | --- | --- |
+
+### Tracker Problems
+- {failed status transitions, permission/schema issues, or none}
 
 ### Remaining Work or Risks
-- {open blockers, follow-ups, next ready item if known}
+- {open blockers, follow-ups, newly Ready cross-repository items, next implementable current-repository item}
 
 ### Next Step
-- {continue with next story, use submit-change-request, use manage-delivery-board, ask owner, etc.}
+- {continue in current repo, request cross-repo implementation authorization, use check-production-readiness then submit-change-request, use manage-delivery-board, ask owner, etc.}
 ```

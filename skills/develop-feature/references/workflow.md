@@ -19,7 +19,7 @@ When this workflow creates or materially changes an implementation plan, stop be
 4. Present the plan and wait for approval.
 5. Implement approved tasks incrementally.
 6. Run validation.
-7. Summarize diff and draft PR body, or hand off to `submit-change-request` when authorized to commit, push, open/update a PR/MR, and watch CI/CD.
+7. Use the Candidate Staging gate below, then hand the exact staged candidate to `check-production-readiness`; after READY or CONDITIONALLY READY, use `submit-change-request` when authorized.
 
 ## Path B: Plan to PR
 
@@ -27,7 +27,7 @@ When this workflow creates or materially changes an implementation plan, stop be
 2. Confirm the plan is approved. If not, summarize it and ask before coding.
 3. Implement in dependency order.
 4. Run validation after meaningful milestones.
-5. Draft PR body referencing the plan and completed checks, or hand off to `submit-change-request` when authorized to commit, push, open/update a PR/MR, and watch CI/CD.
+5. Draft the PR body, use the Candidate Staging gate below, hand the exact staged candidate to `check-production-readiness`, then use `submit-change-request` after READY or CONDITIONALLY READY when authorized.
 
 ## Path C: Implement Only
 
@@ -56,9 +56,15 @@ Use for large greenfield builds or high-risk features. Preserve the same approva
 1. Builder proposes the smallest working version and validation plan.
 2. User approves the build slice.
 3. Builder implements the approved slice.
-4. Reviewer attacks assumptions, edge cases, UX, tests, security, and maintainability.
-5. Builder fixes the highest-value findings.
-6. Repeat until validation passes or diminishing returns are clear.
+4. Review the diff for correctness, edge cases, UX, tests, security, maintainability, and scope.
+5. Fix only high-confidence findings within the approved slice; present scope-changing findings for approval.
+6. Rerun affected validation and repeat until checks pass or remaining findings require user input.
+
+## Candidate Staging
+
+Use this gate only when the user requests readiness/submission or otherwise authorizes staging. Snapshot `git status --short`, `git diff`, and `git diff --cached` first. Present the intended file/hunk allowlist; stop on staged/unstaged overlap or unrelated pre-staged content unless the user approves an isolation plan. Stage only intended hunks with path-limited or patch staging, then verify both cached and working-tree diffs, run `git diff --cached --check`, and prove no intended hunk remains unstaged or unrelated hunk was absorbed. Do not commit or push.
+
+Without staging authorization, stop after validated implementation and return the exact staging plan; do not call the work an exact staged candidate or invoke `check-production-readiness`.
 
 ## Final Report
 
@@ -68,4 +74,4 @@ Include:
 - Changed files.
 - Validation commands and results.
 - Remaining risks or follow-ups.
-- PR/MR title/body or `submit-change-request` handoff if requested.
+- Production-readiness handoff only when the candidate was staged and verified; otherwise the pending staging plan. Follow with the requested PR/MR title/body or `submit-change-request` handoff when applicable.

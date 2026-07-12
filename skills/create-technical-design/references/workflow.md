@@ -46,7 +46,9 @@ Use this structure unless the repo has its own template:
 {one-paragraph design}
 
 ## Codebase Findings
-- `{path}` — {verified finding}
+- `{path:line}` — `{symbol}` — {verified finding}
+
+Use a line range when the finding spans multiple lines. Use `TBD — needs research` rather than an unverified citation.
 
 ## Decisions
 | Decision | Choice | Alternatives | Rationale | Reversible? |
@@ -76,13 +78,17 @@ Use this structure unless the repo has its own template:
 | Seed | Repo/System | Depends On | Notes |
 | --- | --- | --- | --- |
 
+## Verification Notes
+- Verified: {paths, symbols, contracts, and commands checked}
+- Unverified/TBD: {claim and required next action}
+
 ## Risks and Open Questions
 - {risk/question} — {owner or next action}
 ```
 
 ## 5. Gate and Handoff
 
-- Verify every technical reference exists or is marked TBD.
+- Verify every technical reference exists or is marked TBD, and record the result in Verification Notes.
 - Separate blocked decisions from implementation-ready decisions.
 - Ask the user to approve the design before creating tracker items or coding.
 - Recommend `create-test-strategy` for detailed validation planning before `create-prd-work-items` creates story/ticket validation fields.

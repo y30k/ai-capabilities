@@ -24,6 +24,8 @@ Use repo docs and available tools to find:
 
 Name any missing credentials, dashboards, URLs, or systems that block observation.
 
+For every required signal, record the query or dashboard URL, environment or cohort, observation timestamp and window, baseline window, aggregation or percentile, freshness, and access result. Compare equivalent windows. A required signal that is inaccessible, stale, undefined, or too noisy cannot support `HEALTHY`; classify the rollout as `BLOCKED` when advancement depends on it, otherwise use `WATCH` and state the limitation.
+
 ## 3. Assess Health
 
 Compare current signals to baseline or expected behavior:
@@ -65,19 +67,26 @@ Prefer tracker-native relationships to connect follow-ups to the release, incide
 ## Release Observation Report
 
 **Release**: {version/tag/deploy}
+**Commit/deployment ID**: {identifier}
 **Environment**: {env/cohort}
+**Observer/time zone**: {identity or role/time zone}
 **Window**: {time}
+**Owner/escalation/rollback authority**: {names or unknown}
 **State**: HEALTHY | WATCH | BLOCKED | ROLLBACK/ESCALATE RECOMMENDED
 
 ### Signals Checked
-| Signal | Source | Baseline/Expected | Current | Verdict |
-| --- | --- | --- | --- | --- |
+| Signal | Required? | Environment/region/cohort | Source/Query | Access result | Aggregation/percentile | Expected bound/threshold | Baseline window/value | Current window/value/timestamp | Freshness | Verdict |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 ### User/Operator Feedback
 - {feedback or none found}
 
 ### Blockers or Risks
-- {issue, evidence, recommended action}
+- {issue, evidence, missing prerequisite, owner, recommended action}
+
+### Authorization and Redaction
+- {state-changing actions authorized/taken, or none}
+- {sensitive data redacted, or none encountered}
 
 ### Follow-up Work
 | Item | Type | Relationship | Status |
@@ -85,4 +94,6 @@ Prefer tracker-native relationships to connect follow-ups to the release, incide
 
 ### Recommendation
 {continue rollout, pause, watch, rollback/escalate, or create follow-ups}
+
+**Next observation**: {time/window and owner}
 ```

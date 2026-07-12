@@ -1,4 +1,4 @@
 interface:
   display_name: "Check Production Readiness"
-  short_description: "Strict release readiness and performance review"
-  default_prompt: "Use $check-production-readiness to review the staged changes, fix and stage P0/P1/P2 issues, establish performance baselines when needed, and run mandatory gates."
+  short_description: "Strict pre-submission production readiness"
+  default_prompt: "Use $check-production-readiness to review this exact staged change before submission, run mandatory pre-submit gates, and hand readiness evidence to $submit-change-request."

@@ -16,7 +16,7 @@ Inspect repo files before recommending tests:
 - fixtures, factories, seed data, snapshots, mocks, service emulators, and test environments
 - release docs, quality gates, coverage expectations, performance budgets, SLOs, and dashboards
 
-Record exact commands and files. If a command needs secrets/services, name the prerequisite.
+Record exact commands, files, and relevant line or symbol evidence. If a command needs secrets or services, name the prerequisite.
 
 ## 3. Build the Validation Matrix
 
@@ -31,11 +31,11 @@ Use this structure:
 - Gate status: draft | proposed | approved
 
 ## Existing Validation Inventory
-- `{path}` — {command/test/fixture and relevance}
+- `{path:line}` — `{command/test/fixture}` — {relevance and prerequisites}
 
 ## Validation Matrix
-| Requirement/Story | Risk | Acceptance Criteria | Test Level | Command/Method | Data/Env | Owner | Gate? |
-| --- | --- | --- | --- | --- | --- | --- | --- |
+| Requirement/Story | Risk | Acceptance Criteria | Test Level | Command/Method | Preconditions/Data/Env | Expected Evidence | Owner/Signoff | Gate? |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
 
 ## Nonfunctional Checks
 | Area | Needed? | Check | Baseline/Budget | Notes |
@@ -65,7 +65,7 @@ Do not require slow end-to-end tests when a narrower check gives equal confidenc
 
 ## 5. Identify Work Items and Gates
 
-- Mark which checks are mandatory gates for implementation, PR review, readiness, and post-release observation.
+- Mark which checks are mandatory gates for implementation, pre-submission production readiness, PR/MR-created CI/CD, PR review, and post-release observation.
 - If test infrastructure work is needed, create proposed items for `create-prd-work-items` instead of hiding it in prose.
 - If a performance-sensitive change lacks a baseline, propose a baseline task and measurement method.
 - If a gate is external or manual, document who/what must provide signoff.

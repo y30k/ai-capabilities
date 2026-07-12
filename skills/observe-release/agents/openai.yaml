@@ -1,4 +1,4 @@
 interface:
   display_name: "Observe Release"
   short_description: "Verify rollout health after release"
-  default_prompt: "Use $observe-release to monitor this release, verify health signals, and capture follow-up work."
+  default_prompt: "Use $observe-release to assess this rollout from read-only health evidence, state any missing signals, and recommend follow-up work."

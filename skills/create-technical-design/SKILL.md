@@ -1,7 +1,7 @@
 ---
 name: create-technical-design
 description: |
-  Create implementation-ready technical designs, architecture plans, ADRs, interface contracts, rollout/observability plans, and risk reviews from approved PRDs or feature specs. Use after PRD approval and before creating work items or coding; when the user asks for a technical design, architecture spec, design doc, ADR, feasibility refinement, API/data model design, migration plan, implementation plan, or technical handoff. Planning only; no source-code edits unless the user explicitly asks to update documentation.
+  Create implementation-ready technical designs, architecture plans, ADRs, interface contracts, rollout and observability plans, and risk reviews from approved PRDs or feature specs. Use after PRD approval and before creating work items or coding; when the user asks for a technical design, architecture spec, design doc, ADR, feasibility refinement, API or data-model design, migration plan, implementation plan, or technical handoff. Planning only: read source, configuration, schemas, and tests for evidence; write or update only the requested design artifact, and never edit implementation files or implement the feature.
 ---
 
 # Create Technical Design
@@ -10,7 +10,7 @@ Use this skill to bridge approved product requirements to implementation-ready t
 
 ## Boundary
 
-This is a planning and documentation skill. Read code, configs, schemas, tests, and deployment docs to verify claims, but do not edit source code or implement features. Write durable design artifacts under `docs/technical-designs/` unless the user provides another path.
+Treat this as a planning and documentation skill. Read code, configuration, schemas, tests, and deployment docs to verify claims, but modify only the requested design artifact; do not edit source, configuration, schema, migration, or test files or implement features. Write durable design artifacts under `docs/technical-designs/` unless the user provides another documentation path.
 
 If the product problem or requirements are not approved, use `create-interactive-prd` first. If the user already has approved tickets and wants coding, use `implement-prd-stories` instead.
 
@@ -34,4 +34,4 @@ After approval, recommend:
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/technical-designs/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write supporting findings and review notes under `docs/technical-designs/` or another user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

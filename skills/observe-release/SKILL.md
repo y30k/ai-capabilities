@@ -1,7 +1,7 @@
 ---
 name: observe-release
 description: |
-  Verify post-release or post-deployment health, rollout safety, SLOs, logs, metrics, dashboards, feature flags, incidents, rollback criteria, user feedback, and follow-up work. Use after a release, deploy, feature-flag rollout, migration, or production change; when the user asks to monitor a release, validate production behavior, decide whether to continue/rollback, or turn production learnings into issues/PRDs. Do not make destructive production changes without explicit authorization.
+  Observe a completed or in-progress release, deployment, feature-flag rollout, migration, or production change by comparing required health signals with baselines and recommending whether to continue, pause, roll back, or escalate. Use when the user asks to monitor rollout health, validate production behavior, inspect SLOs, logs, metrics, alerts, or feedback, or capture evidence-backed follow-up work. Operate read-only by default and require explicit authorization for production or tracker mutations.
 ---
 
 # Observe Release
@@ -10,9 +10,9 @@ Use this skill after release execution to close the loop between shipped softwar
 
 ## Boundary
 
-This skill reads release artifacts, deployment state, observability signals, dashboards, logs, metrics, alerts, feedback, and trackers. Do not rollback, change feature flags, alter infrastructure, or create tracker items unless the user explicitly authorizes that action.
+Operate read-only by default and use least-privilege queries. Do not run state-changing smoke checks, acknowledge alerts, rollback, change feature flags or infrastructure, rerun jobs, or create or update tracker items without explicit action-specific authorization. Redact secrets and personal or sensitive data from reports. If a required check can mutate production, mark it blocked and ask before running it.
 
-If the release has not been prepared or cut, use `release` first. If the candidate has not passed readiness, use `check-production-readiness` first.
+If the release has not been prepared or cut, use `release` first. If the released source lacks pre-submission production-readiness evidence, record that lifecycle gap and escalate it; do not pretend a retrospective readiness pass can protect an already shipped change.
 
 ## Runbook
 
@@ -33,4 +33,4 @@ If the release has not been prepared or cut, use `release` first. If the candida
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/release-observations/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write durable observation reports under `docs/release-observations/` or a user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

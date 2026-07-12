@@ -1,13 +1,7 @@
 ---
 name: create-interactive-prd
 description: |
-  Guide an AI coding agent through a planning-only interactive PRD workflow: problem-first,
-  hypothesis-driven product requirements created through gated user questions,
-  market/codebase research, technical feasibility assessment, PRD generation, and
-  validation. Use when the user asks to create, write, or plan a PRD, product
-  requirements document, feature spec, interactive PRD, plan a feature, or turn an
-  idea into an implementation-ready product spec. Reads code for feasibility but does
-  not modify source code or implement. Stops after PRD validation for user review.
+  Guide a gated, planning-only workflow that turns a product idea into a problem-first, hypothesis-driven PRD through user interviews, market and repository research, feasibility assessment, generation, and validation. Use when the user asks to create or revise a PRD, product requirements document, product or feature requirements specification, interactive PRD, or evidence-backed product specification from an idea. Read repository files for feasibility, but do not modify source code or implement; stop after PRD validation for user review.
 ---
 
 # Create Interactive PRD
@@ -57,7 +51,7 @@ Then ask all Foundation Questions together and wait:
 After foundation answers:
 
 1. Search for similar products, competitor approaches, common patterns, anti-patterns, and recent trends. If web search is unavailable, say so and mark market evidence as TBD unless the user provides sources.
-2. Explore the codebase deeply. Use search and file reads to find related functionality, APIs, UI components, database tables, types, tests, and conventions.
+2. Explore the codebase deeply. Use search and file reads to find related functionality, APIs, UI components, database tables, types, tests, and conventions. If no repository is available, state the limitation, mark repository-dependent findings and feasibility `TBD — needs research`, and never invent paths or symbols.
 3. Summarize what already exists before suggesting anything new.
 
 Present:
@@ -79,7 +73,7 @@ Then ask all Deep Dive Questions and wait:
 
 ### Phase 3 — Technical Feasibility
 
-After deep dive answers, assess the smallest codebase-grounded solution:
+After deep dive answers, assess the smallest codebase-grounded solution when a repository is available:
 
 1. Read actual files for related endpoints, queries, schemas, components, types, and tests.
 2. Identify what partially solves the problem today.
@@ -87,17 +81,21 @@ After deep dive answers, assess the smallest codebase-grounded solution:
 4. Identify primitives needed: query, schema, component, prop, endpoint, command, job, event, config, or documentation.
 5. Identify risks and assumptions needing validation.
 
+When no repository is available, do not perform steps 1–4 as if evidence exists. Keep existing primitives, file paths, smallest code change, and feasibility `TBD — needs research`; identify only product-level risks and assumptions, and mark repository validation `NOT RUN — repository unavailable`.
+
 Present:
 
 ```markdown
-**What Already Exists (verified by reading code):**
-- `{file:line}` — {endpoint/component/query/type and what it does}
+**What Already Exists:**
+- `{file:line}` — {verified primitive and what it does}
+- Or: TBD — needs research; repository unavailable and no primitives verified
 
 **Smallest Change to Solve the Problem:**
 - {change}: extend/modify `{file}` — {what to do}
+- Or: TBD — needs research; implementation path not verified
 
 **Technical Context:**
-- Feasibility: HIGH/MEDIUM/LOW because {reason}
+- Feasibility: HIGH/MEDIUM/LOW because {repository-grounded reason}, or TBD — needs research; repository validation NOT RUN
 - Key risk: {main concern}
 - Estimated phases: {rough breakdown}
 ```
@@ -114,21 +112,7 @@ Then ask all Scope Questions and wait:
 
 Before writing, read `references/prd-template.md`. Generate a complete PRD using all user answers, research findings, and verified codebase evidence.
 
-Required sections:
-
-1. Problem Statement
-2. Evidence
-3. Proposed Solution
-4. Key Hypothesis
-5. What We're NOT Building
-6. Success Metrics
-7. Open Questions
-8. Users & Context
-9. Solution Detail, including MoSCoW table and MVP scope
-10. Technical Approach with verified file paths, symbols, schemas, and endpoints
-11. Implementation Phases with status, dependencies, and parallelism notes
-12. Decisions Log
-13. Research Summary
+Use every template section in the documented order. Do not omit or duplicate sections; mark unknown content `TBD — needs research`.
 
 ### Phase 5 — Validate PRD
 
@@ -140,14 +124,15 @@ After writing the PRD, read it back and verify every technical claim against the
 - Component, function, type, and interface names are accurate.
 - Proposed new work does not duplicate an existing primitive.
 
-If corrections are needed, edit the PRD directly and add `## Validation Notes` documenting corrections. If none are needed, add that all technical references were verified.
+If corrections are needed, edit the PRD directly and add `## Validation Notes` documenting corrections. If repository evidence was available and no corrections are needed, state that all technical references were verified. If no repository was available, keep feasibility and repository-dependent claims `TBD — needs research`, state that repository validation was NOT RUN, and never label the technical references verified.
 
 Report:
 
 ```markdown
-## PRD Validated
+## PRD Validation Result
 
 **File**: `{prd-path}`
+**Repository validation**: PASSED | NOT RUN — repository unavailable
 **Checks**: {N} file paths, {N} endpoints, {N} DB/schema references, {N} components/functions/types
 **Corrections**: {count}
 
@@ -162,4 +147,4 @@ Review the PRD. After explicit approval, use `create-technical-design` to refine
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/create-interactive-prd/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write the PRD to the Output Location above. Write any additional generated documentation under repository-root `docs/`, never under agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

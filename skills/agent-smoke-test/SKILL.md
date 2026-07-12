@@ -1,20 +1,22 @@
 ---
 name: agent-smoke-test
 description: |
-  Run portable smoke tests for any AI coding agent or automation environment: instruction following, structured output, file operations, shell/tool availability, loop/gate behavior, and repository safety. Use when validating a new agent, model, provider, workspace, or integration; when smoke tests differ only by coding agent; or before trusting a long-running workflow.
+  Evaluate an AI coding agent, model/provider integration, tool harness, or workspace with portable, evidence-recorded smoke probes for instruction following, strict structured output, safe file/shell tools, multi-turn recovery, and approval gates. Use when onboarding or comparing agents, models, providers, workspaces, or tool integrations; diagnosing harness regressions; or checking prerequisites before long-running automation.
 ---
 
 # Agent Smoke Test
 
-Use this skill to verify what the current coding agent can reliably do in a project. It replaces provider-specific smoke skills with one portable checklist.
+## Subject Boundary
+
+Test a clearly identified subject agent through a separate session, API, CLI, or harness and retain its raw responses or tool events. Do not treat the evaluator's behavior in the current conversation as independent evidence. If no isolated subject channel exists, run only harness/workspace checks and mark agent-behavior checks `NOT RUN`.
 
 ## Runbook
 
-1. Ask what level to run if unclear: **quick** (chat only), **tools** (read/write/shell), or **workflow** (loop/gate/recovery behavior).
-2. Read `references/workflow.md`.
-3. Run only safe checks by default. Do not modify project source unless the user approves; write scratch files under `docs/agent-smoke-test/`.
-4. Report capabilities, failures, and recommended guardrails for future tasks.
+1. Select **quick** (chat probes), **tools** (safe read/write/shell probes), or **workflow** (multi-turn, gate, and recovery probes); ask when the requested depth is unclear.
+2. Read `references/workflow.md` and record the subject, model/provider, harness, permissions, workspace, and invocation mechanism.
+3. Run read-only checks by default. For write probes, use a uniquely named owned temporary directory outside the repository when possible; never modify source or pre-existing files.
+4. Report raw evidence, pass/fail/not-run results, cleanup status, limitations, and recommended guardrails.
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/agent-smoke-test/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Persist a report under `docs/agent-smoke-test/` only when the user requests one. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

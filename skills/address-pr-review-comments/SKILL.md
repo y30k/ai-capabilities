@@ -1,42 +1,28 @@
 ---
 name: address-pr-review-comments
 description: |
-  Address pull request review comments end-to-end: fetch unresolved GitHub PR review threads and comments, triage each reviewer concern, implement approved fixes on the PR branch, validate changes, commit locally when code changes, reply on the original review threads with clear per-comment dispositions including the relevant commit short SHA when possible, push, and summarize remaining follow-up. Use when the user asks to handle PR review comments, respond to reviewer threads, fix requested changes, resolve review feedback, or update a PR after code review.
+  Address existing GitHub pull request review feedback end-to-end: build a worklist from unresolved threads only, recheck thread state before acting, triage each concern, implement approved fixes, validate and commit changes, post evidence-rich replies explaining what was addressed and why, push the PR branch, resolve fully addressed threads, and report anything still unresolved. Use when the user asks to handle reviewer comments, respond to PR review threads, fix requested changes from a review, resolve addressed feedback, or remediate an existing changes-requested review. Use review-pull-request for a first-pass review and submit-change-request for branch updates not driven by existing review feedback.
 ---
 
 # Address PR Review Comments
 
-Use this coding/review-response skill when a PR already has reviewer comments and the user wants the agent to address them, reply on the threads, and push an update.
-
 ## Boundary
 
-This skill may edit source code, commit, push, and post GitHub comments only with user authorization. If the user asks only to analyze review feedback, stop after the triage plan. If the user asks to address comments, treat that as authorization to implement fixes, but still ask before destructive changes, force-pushes, branch rewrites, production changes, or dismissing/marking threads resolved.
+Treat a request to address review comments as authorization for scoped local edits and validation. Commit, post thread replies, push, and resolve addressed threads only when the user also requests or approves those actions. Before the first commit or remote mutation, present one action plan listing the still-unresolved thread IDs, commit, replies, push target, and threads eligible for resolution; obtain any missing authorization once. Include resolution in the default plan, and after approval do not ask again for each eligible thread. Without approval, stop after validated local edits and return draft replies plus a `submit-change-request` handoff. Always ask before destructive changes, force-pushes, branch rewrites, production changes, or dismissing reviews.
+
+Never address a thread whose current `isResolved` state is true. Exclude resolved threads before triage, and recheck state before implementation, reply, and resolution so concurrent reviewer actions become no-op skips rather than duplicate work.
 
 Do not use this skill for first-pass PR review; use `review-pull-request`. Do not use it for merge conflicts; use `resolve-merge-conflicts`.
 
-## Runbook
+## Procedure
 
-1. Read `references/workflow.md`.
-2. Identify the PR, repository, base branch, head branch, review state, checks, and current local git state.
-3. Fetch unresolved review threads, top-level PR comments, review summaries, and requested-changes reviews using GitHub CLI/API or available GitHub tools.
-4. Build a thread-by-thread triage table: actionable fix, question/clarification, duplicate, already fixed/stale, out of scope, or needs owner decision.
-5. Present the plan and wait for approval unless the user already explicitly requested implementation of the exact PR feedback.
-6. Check out the PR branch and implement only high-confidence, in-scope fixes tied to the review comments.
-7. Run targeted validation and any relevant required checks; stop if validation fails or feedback changes scope.
-8. Commit only the intended code changes locally before replying when a code fix was made, so replies can cite the relevant short SHA. Do not push yet.
-9. Reply on each original review thread before pushing, with a concise per-comment description of what changed, validation evidence, and the relevant commit short SHA when possible. Use a top-level PR comment only for non-thread feedback or a final summary.
-10. Push to the PR branch, then report pushed commit, validation, thread replies, current CI/CD status if available, and remaining unresolved items. Use `submit-change-request` in update or CI-monitor-only mode when connected automation needs watching after the push.
+Read and follow `references/workflow.md`. After authorization is confirmed, preserve its mutation sequence: commit locally, reply on each still-unresolved original thread, push code fixes, resolve each fully addressed thread, then verify resolution.
 
-## Required Reply Discipline
-
-- Reply to the original review thread whenever the feedback came from a thread.
-- Mention whether the issue was fixed locally, answered without code change, deferred with reason, or blocked.
-- For code fixes, include the relevant commit short SHA when a local commit exists; if no code commit exists, say why no SHA applies.
-- Describe the specific change made for that comment, not just "fixed".
-- Include validation evidence when available.
-- Do not claim a fix was pushed before the push succeeds; say it is addressed in local commit `<short-sha>` and will be pushed after replies.
-- Do not mark threads resolved unless the user explicitly authorizes it and the fix/answer is complete.
+- Treat focused validation plus passing or explicitly waived updated required CI/CD as the readiness confirmation for review remediation; do not invoke a separate final production-readiness phase.
+- In every reply, state the disposition, original concern, what changed or was answered, why that addresses the concern, affected file or symbol when applicable, relevant local commit short SHA or why none applies, and exact validation evidence.
+- Resolve fix threads only after validation, reply, successful push, and proof that each reply-cited SHA is on the PR branch; if reconciliation rewrites a SHA, post a corrective reply naming the pushed replacement first. Resolve answer-only, verified-stale, or duplicate threads only after the explanatory reply is complete. Leave deferred, blocked, disputed, partial, failed-validation, failed-reply, and failed-push threads unresolved.
+- Do not claim a push or resolution succeeded before verifying it.
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/address-pr-review-comments/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write durable plans, findings, and response reports under `docs/address-pr-review-comments/` or a user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

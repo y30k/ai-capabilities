@@ -1,7 +1,7 @@
 ---
 name: implement-prd-stories
 description: |
-  Implement approved, unblocked PRD stories or tracker work items one slice at a time with validation, routine story-status progression, and post-completion blocked-story readiness sweeps. Use after `create-prd-work-items` or `manage-delivery-board` identifies dependency-ready GitHub Projects, GitHub Issues, Jira items, or approved local stories; when the user asks to code PRD stories, implement the next unblocked ticket, continue feature implementation from a delivery board, advance ready work, or keep a PRD moving. Requires implementation authorization for the run, then minimizes repeated user prompts unless requirements, blockers, validation failures, destructive actions, cross-repo scope, or owner decisions require manual review. Not for creating tracker items or decomposing PRDs into tickets; use `create-prd-work-items` for that.
+  Implement approved, unblocked PRD stories or tracker work items one slice at a time in the current repository, validate and stage each completed story's changes, move that story to Done, then move newly unblocked dependent stories to Ready across the tracking system regardless of their owning repository. Use after `create-prd-work-items` or `manage-delivery-board` identifies dependency-ready GitHub Projects, GitHub Issues, Jira items, or approved local stories; when the user asks to implement the next unblocked ticket, continue delivery from a board, advance ready work, or keep a PRD moving. Require explicit authorization before editing files or Git state in another repository. Not for creating tracker items or decomposing PRDs; use `create-prd-work-items`.
 ---
 
 # Implement PRD Stories
@@ -14,35 +14,40 @@ This skill starts after requirements/design/story planning. Prefer consuming tra
 
 If the user provides only a PRD with no approved story/work-item breakdown, do not silently decompose and code. Ask whether to use `create-prd-work-items` first, or create a temporary local story plan for this session and wait for approval before editing source code.
 
+Resolve and record the current Git repository root before planning. Keep all source, test, generated-file, documentation, and Git-index mutations inside that repository. Do not edit a sibling repository, nested independent repository, submodule, or other worktree unless the user explicitly authorizes that repository. Cross-repository tracker reads and routine Done/Ready status transitions required by the dependency sweep are tracker mutations, not authorization for cross-repository code or file changes.
+
 Do not implement blocked work. Dependency readiness must come from tracker relationships or an explicitly approved local dependency table, not labels or body prose alone.
 
 ## Autonomy Policy
 
-Treat explicit authorization to implement a selected story, ready queue, or PRD delivery board as authorization to perform routine, non-destructive delivery actions for that run:
+Treat explicit authorization to implement a selected story, ready queue, or PRD delivery board as authorization for this completion protocol without repeated prompts:
 
-- select the next ready story when the user did not name a specific item
-- move the active story through ordinary statuses such as Ready → In Progress → Validation/Review/Done according to the board schema
-- record validation evidence, changed files, blockers, and follow-up notes on the story
+- make scoped technical changes and run validation only in the current repository
+- select the next ready story when the user authorized a queue but did not name an item
+- stage only the completed story's local changes while preserving unrelated working-tree and index state
+- apply routine tracker transitions for the active story, including In Progress and the final Done transition
+- record validation, staged files, blockers, and follow-up evidence on the story when the tracker supports it
+- after Done is verified, inspect dependency-linked blocked stories across the tracking scope without filtering by owning repository, and move every now-unblocked story to Ready
 - attempt bounded self-repair for validation failures caused by the current implementation
-- after a story completes, review blocked stories in the same PRD/epic/project and move any now-unblocked items to Ready according to tracker-native relationships
-- continue to the next ready story when the user asked to continue the feature/PRD queue, until no ready work remains or a manual-review trigger appears
+- continue with another ready story only when requested and only when its technical work belongs to the current repository or cross-repository implementation was explicitly authorized
 
-Ask for user input only when manual review is truly required: ambiguous requirements, scope changes, blocked dependencies, destructive tracker changes, closing/deleting/reassigning contentious work, cross-repo work not authorized for this run, missing credentials/signoffs, validation failures that change scope or require weakening checks, production-impacting decisions, or any action that would rewrite history or bypass required review.
+These routine active-story and dependency-driven Done/Ready tracker transitions are part of implementation authorization. Ask for user input only when manual review is truly required: ambiguous requirements, scope changes, blocked dependencies, unavailable or ambiguous Done/Ready mappings, destructive or contentious tracker changes beyond these routine transitions, closing/deleting/reassigning unrelated work, technical edits outside the current repository, missing credentials/signoffs, validation failures that change scope or require weakening checks, production-impacting decisions, or any action that would commit, push, rewrite history, or bypass required review.
 
 ## Runbook
 
 1. Read `references/workflow.md`.
-2. Identify the implementation source: tracker item, ready queue, approved local story list, or PRD fallback.
-3. Discover the tracker/local status schema and relationship model before changing statuses.
-4. Verify the selected story is approved, unblocked, small enough, owned by this repo/system, and has acceptance criteria plus validation.
-5. If implementation authorization for this exact story/queue/run already exists, proceed without another approval pause; otherwise present a focused plan and ask before source-code edits.
-6. Move the active story to the appropriate in-progress status when the workflow supports it.
-7. Implement one story at a time, running targeted validation and then broader required checks when warranted.
-8. If validation fails from an implementation mistake, attempt a bounded repair; stop only when the fix changes scope, blockers appear, or owner input is needed.
-9. Update the story with status, validation evidence, changed files, blockers, and links. Mark Done only when the story's definition of done is met; otherwise use the repo's implemented/ready-for-review status.
-10. After completion, perform a blocked-story readiness sweep: re-check blocked items tied to the same PRD/epic/project and move items to Ready when all tracker-native blockers are done/closed/accepted/waived.
-11. When validated work is ready for remote review, hand off to `submit-change-request` for commit/push/PR/MR creation and CI/CD monitoring.
+2. Resolve the current repository root and snapshot its working tree and index before editing; if another repository was explicitly authorized, resolve and snapshot that named root before touching it.
+3. Identify the implementation source: tracker item, ready queue, approved local story list, or PRD fallback.
+4. Discover the tracker/local Done and Ready mappings plus the relationship model before changing statuses.
+5. Verify the selected story is approved, unblocked, small enough, technically owned by the current repository unless cross-repository implementation was explicitly authorized, and has acceptance criteria plus validation.
+6. If implementation authorization for this exact story/queue/run already exists, proceed without another approval pause; otherwise present a focused plan and ask before source-code edits.
+7. Move the active story to the appropriate in-progress status, then implement only that story in the current repository and run targeted plus broader required validation.
+8. If validation fails from an implementation mistake, attempt a bounded repair; stop when the fix changes scope, blockers appear, or owner input is needed.
+9. After validation passes, stage only the story's intended changes in each explicitly authorized repository touched and verify no story-owned hunk remains unstaged; do not commit or push.
+10. Move the active story to Done, attach completion evidence when supported, and refetch it to verify the transition. Do not claim completion or unblock dependents if staging or Done verification fails.
+11. Sweep dependency-linked blocked stories across the tracker, including items owned by other repositories. Move each to Ready only when every blocker and independent readiness gate is satisfied; refetch to verify each transition. If any required Ready transition fails, preserve the staged Done story and stop before implementing another item. Do not edit those repositories.
+12. For every technical repository touched, treat its source commit and staged index as a separate candidate and run `check-production-readiness` in that repository. If unrelated pre-existing staged entries remain anywhere, preserve them and ask how to separate or include them rather than misrepresenting an index. Record one verdict per repository, then use `submit-change-request` separately for each READY or CONDITIONALLY READY candidate.
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/implement-prd-stories/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write durable implementation plans and story reports under `docs/implement-prd-stories/` or a user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.
