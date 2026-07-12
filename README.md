@@ -76,7 +76,7 @@ These skills were created from scratch for this repository and related y30k/Cape
 
 Current repository-original skills:
 
-- `address-pr-review-comments` — process only unresolved GitHub review threads, implement and validate approved fixes, commit locally, reply on each original thread with what changed and why plus commit/validation evidence, push, resolve fully addressed threads, and report anything still open.
+- `address-pr-review-comments` — process only unresolved GitHub review threads, implement and validate in-scope fixes, stage and commit, reply on each original thread with what changed and why plus commit/validation evidence, push normally, resolve fully addressed threads, and report anything still open; a direct request authorizes this default sequence unless a user or repository policy requires an approval checkpoint.
 - `check-production-readiness` — strict fail-closed pre-submission review for the exact staged change, including mandatory gate discovery, authorized P0/P1/P2 fixes, performance readiness, baseline handling, and READY/CONDITIONALLY READY/NOT READY verdict discipline.
 - `create-technical-design` — approved PRD/spec to implementation-ready technical design, ADRs, contracts, rollout/rollback, observability, and risks.
 - `create-test-strategy` — requirements/design/work items to acceptance, regression, integration, performance, security, accessibility, and release validation matrix.
@@ -98,7 +98,7 @@ Current workflow-inspired skills:
 - `create-interactive-prd` — planning-only interactive PRD creation.
 - `develop-feature` — plan-gated feature implementation for approved smaller features or specs.
 - `fix-github-issue` — selectable-rigor GitHub issue fixing.
-- `implement-prd-stories` — implement approved, unblocked stories only in the current repository by default; validate and stage each completed story, mark it Done, then move newly unblocked dependency-linked stories to Ready across repositories.
+- `implement-prd-stories` — implement approved, unblocked stories only in the current repository by default; validate and stage each story, apply the tracker's actual completion status, and move newly unblocked dependency-linked stories to Ready across repositories only after Done is genuinely satisfied.
 - `improve-code-health` — architecture review and safe refactoring.
 - `maintainer-standup` — maintainer status briefing.
 - `manage-github-issues` — create, dedupe, and triage issues.
@@ -118,10 +118,10 @@ Examples:
 - `create-test-strategy` defines validation gates before implementation.
 - `create-prd-work-items` creates or updates tracker stories only after permission.
 - `manage-delivery-board` identifies the next unblocked work item.
-- `implement-prd-stories` starts after work-item approval, keeps technical changes in the current repository unless explicitly authorized otherwise, stages validated story changes, marks the story Done, and performs cross-repository dependency-driven Ready transitions.
+- `implement-prd-stories` starts after work-item approval, keeps technical changes in the current repository unless explicitly authorized otherwise, stages validated story changes, applies tracker-accurate completion semantics, and performs cross-repository dependency-driven Ready transitions only from verified Done.
 - `check-production-readiness` reviews the exact staged change before initial submission or fast track and hands READY or CONDITIONALLY READY evidence to `submit-change-request`; fast track requires READY.
 - `submit-change-request` commits, pushes, creates/updates PRs or MRs, and monitors CI/CD only with authorization; direct-to-default fast track is non-default and requires explicit fast-track/bypass-PR wording.
-- `address-pr-review-comments` excludes resolved threads, posts traceable what/why/commit/validation replies, implements approved fixes, and resolves fully addressed threads after verified delivery, with remote actions only when authorized.
+- `address-pr-review-comments` excludes resolved threads, posts traceable what/why/commit/validation replies, implements in-scope fixes, and resolves fully addressed threads after verified delivery; a direct request authorizes staging, commit, replies, normal push, and resolution unless the user or repository policy explicitly requires approval.
 - `observe-release` verifies health and captures follow-up work after release; it should not rollback or mutate production without explicit authorization.
 
 ## Using These Skills

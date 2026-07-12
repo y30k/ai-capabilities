@@ -25,7 +25,9 @@ gh pr view "$PR" --json number,title,url,headRefName,headRefOid,headRepository,h
 ```
 
 - Record the PR head repository owner/name, head ref, and provider-reported head OID. Identify the local remote whose URL matches that head repository; do not assume the configured upstream is the PR target.
+- Discover any repository or organization policy that explicitly requires a confirmation checkpoint for commits, replies, normal PR-head pushes, or thread resolution. Do not invent a checkpoint when no such policy is present.
 - Check out the PR branch with `gh pr checkout "$PR"` unless already on the correct branch.
+- Treat the direct request to address review feedback as authorization for the default end-to-end sequence: scoped edits, validation, staging, commit, replies, normal non-force push to the existing PR head, and resolution of eligible threads. Do not add a confirmation pause unless the user requested one or repository/organization policy requires it.
 
 ## 2. Build an Unresolved-Thread Worklist
 
@@ -97,7 +99,7 @@ Rules:
 
 ## 4. Implement Safely
 
-- Edit only files needed to satisfy approved review feedback.
+- Edit only files needed to satisfy triaged in-scope review feedback.
 - Keep changes smaller than a rewrite unless reviewers requested the rewrite.
 - Preserve PR intent and avoid introducing unrelated cleanup.
 - Track the original concern, affected files/symbols, implementation decision, rationale, validation evidence, and commit for each unresolved thread so its reply is independently auditable.
@@ -120,7 +122,7 @@ Run the smallest reliable validation first, then broader checks when relevant:
 
 Record exact commands and outcomes. If a check cannot run, explain why and what would be needed. For review-driven fixes, this focused validation plus passing or explicitly waived updated required CI/CD is the readiness confirmation; do not run a separate final production-readiness phase.
 
-Before committing or calling GitHub mutations, present one action plan containing the exact intended files, commit plan, still-unresolved thread IDs, actionable non-thread IDs/URLs, reply/response summary per item, explicit PR-head push target, and threads expected to become resolution-eligible. Confirm that the user requested or approved commit, reply, push, and resolution. If authorization is missing, stop after validated local edits and return draft replies plus the precise handoff; do not continue into sections 6–9. Once this plan is approved, resolve eligible threads after push without asking again per thread.
+Before committing or calling GitHub mutations, record one action plan containing the exact intended files, commit plan, still-unresolved thread IDs, actionable non-thread IDs/URLs, reply/response summary per item, explicit PR-head push target, and threads expected to become resolution-eligible. A direct request to address review comments authorizes commit, reply, normal push, and resolution by default, so present the plan for traceability and continue without waiting. Stop before sections 6–9 only when the user explicitly requested read-only, local-only, draft replies, or an approval checkpoint; repository or organization policy requires approval; or a destructive/exceptional action such as force-push, history rewrite, protection bypass, production mutation, review dismissal, or material scope expansion is needed.
 
 ## 6. Commit Locally Before Replying
 
@@ -142,7 +144,7 @@ Stage the intended allowlist, then inspect the index again. If any unrelated pre
 git add -- path/to/file another/path
 git diff --cached --name-only
 git diff --cached
-# Proceed only when the cached diff exactly matches the approved commit allowlist.
+# Proceed only when the cached diff exactly matches the recorded commit allowlist.
 git commit -m "fix: address PR review comments"
 FULL_SHA="$(git rev-parse HEAD)"
 SHORT_SHA="$(git rev-parse --short HEAD)"
@@ -248,7 +250,7 @@ If no code changes were needed, skip commit/push. Complete answer-only or verifi
 
 ## 9. Resolve Fully Addressed Threads
 
-Resolve an approved worklist thread only when its current state is still unresolved, `viewerCanResolve` is true, its reply was posted successfully, and its disposition meets one of these conditions:
+Resolve an active worklist thread only when its current state is still unresolved, `viewerCanResolve` is true, its reply was posted successfully, and its disposition meets one of these conditions:
 
 - **fix** — the change passed focused validation, and every SHA cited in its reply is present on the pushed PR branch or has a corrective reply naming the verified pushed replacement;
 - **answer** — the reply fully answers the concern with concrete evidence;

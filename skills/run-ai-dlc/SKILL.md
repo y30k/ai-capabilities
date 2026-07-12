@@ -16,7 +16,7 @@ This skill routes and governs work. It does not replace the detailed phase skill
 
 1. Read `references/lifecycle.md`.
 2. Identify the user's current lifecycle phase, artifacts, blockers, and desired outcome.
-3. Check required gates before moving forward: approval, design readiness, tracker relationships, validation plan, unblocked work, implementation validation and tracked-story staging/Done/readiness propagation, production readiness, change-request submission, CI/CD automation, review, review-comment remediation, integration, release, and observation.
+3. Check required gates before moving forward: approval, design readiness, tracker relationships, validation plan, unblocked work, implementation validation and tracked-story staging/tracker-accurate completion/readiness propagation, production readiness, change-request submission, CI/CD automation, review, review-comment remediation, integration, release, and observation.
 4. Recommend the next skill and the exact artifact/input it should consume.
 5. If the user asks for an end-to-end plan, produce the ordered skill sequence with entry/exit criteria.
 6. If a capability gap remains, use `skill-creator` or `create-agent-workflow` to create a durable skill/workflow rather than improvising repeatedly.

@@ -1,4 +1,4 @@
 interface:
   display_name: "Address PR Review Comments"
   short_description: "Address and resolve unresolved PR feedback"
-  default_prompt: "Use $address-pr-review-comments to process only unresolved PR threads, validate fixes, reply with what changed and why, push, and resolve fully addressed threads."
+  default_prompt: "Use $address-pr-review-comments to process only unresolved PR threads end-to-end: validate, stage, commit, reply, push normally, and resolve fully addressed threads without an approval pause unless the user or repository policy explicitly requires one."
