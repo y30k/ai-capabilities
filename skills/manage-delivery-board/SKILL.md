@@ -1,7 +1,7 @@
 ---
 name: manage-delivery-board
 description: |
-  Inspect, maintain, and prioritize GitHub Projects, GitHub Issues, or Jira delivery boards for AI-assisted development. Use when the user asks for blocked/unblocked work, next-ready story selection, dependency cleanup, duplicate detection, stale item triage, cross-repo delivery sequencing, sprint/project board hygiene, or implementation handoff. Tracker/planning skill only; do not edit source code.
+  Inspect, maintain, and prioritize GitHub Projects, Jira boards, and tracker views using explicit statuses and dependency relationships. Use when the user asks for blocked or unblocked analysis, next-ready work, dependency cleanup, board-level duplicate or stale-item findings, cross-repo sequencing, sprint or project-board hygiene, or implementation handoff. Use manage-github-issues instead for filing or triaging individual GitHub issues. Tracker/planning skill only; do not edit source code.
 ---
 
 # Manage Delivery Board
@@ -26,8 +26,8 @@ Dependency readiness must come from tracker-native relationships or an explicitl
 
 ## Handoff
 
-Use this skill before implementation sessions, maintainer standups, or sprint planning. Then invoke `implement-prd-stories` with the top unblocked item or queue.
+Use this skill during sprint planning or from a maintainer briefing only when dependency-aware sequencing is required. Hand the top approved, unblocked item or queue to `implement-prd-stories`; do not implement it here.
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/delivery-board/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write durable board reviews and proposed-update reports under `docs/delivery-board/` or a user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

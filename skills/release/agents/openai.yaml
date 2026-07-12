@@ -1,4 +1,4 @@
 interface:
   display_name: "Release"
-  short_description: "Cut releases with gated validation"
-  default_prompt: "Use $release to prepare and cut this release with validation and approval gates."
+  short_description: "Cut releases with mechanics-specific gates"
+  default_prompt: "Use $release to prepare this release, show the version, notes, and release-specific validation evidence, and request separate approval for each commit, tag, push, release, or publish action."

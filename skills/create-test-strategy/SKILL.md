@@ -1,7 +1,7 @@
 ---
 name: create-test-strategy
 description: |
-  Create acceptance, regression, integration, performance, accessibility, security, and release validation strategies from PRDs, technical designs, or work items. Use when the user asks for a test plan, QA strategy, validation matrix, acceptance criteria, coverage gaps, story-level validation, nonfunctional test planning, or release gate design before or during implementation. Planning skill; do not edit source code unless explicitly asked to add tests.
+  Create acceptance, regression, integration, performance, accessibility, security, and release validation strategies from PRDs, technical designs, or work items. Use when the user asks for a test plan, QA strategy, validation matrix, acceptance criteria, coverage-gap analysis, story-level validation, nonfunctional test planning, or release-gate design. Planning only: inspect source and tests for evidence, write the strategy artifact, and do not add or modify tests or implementation files.
 ---
 
 # Create Test Strategy
@@ -10,7 +10,7 @@ Use this skill to turn requirements and technical designs into a concrete valida
 
 ## Boundary
 
-This is primarily a planning skill. Read source and test files to understand current coverage and commands, but do not add or modify tests unless the user explicitly asks for implementation. Write durable plans under `docs/test-strategies/` unless the user provides another path.
+Treat this as a planning-only skill. Read source and test files to understand current coverage and commands, but do not add or modify tests, fixtures, configuration, or implementation. Route implementation to `implement-prd-stories`. Write durable plans under `docs/test-strategies/` unless the user provides another documentation path.
 
 ## Runbook
 
@@ -20,15 +20,15 @@ This is primarily a planning skill. Read source and test files to understand cur
 4. Map each requirement/story/risk to observable acceptance criteria and the smallest reliable validation.
 5. Include nonfunctional checks when relevant: performance, security, privacy, accessibility, reliability, migration/rollback, compatibility, and observability.
 6. Identify missing test harnesses, data, environments, baselines, secrets, or manual signoffs.
-7. Recommend new or updated tracker items via `create-prd-work-items` when validation work is non-trivial.
+7. Record proposed tracker items for non-trivial validation work; create them only in a subsequent `create-prd-work-items` run.
 8. Present the validation matrix and ask for approval before treating it as a gate.
 
 ## Handoff
 
 - Use the matrix while creating work items so each story has validation.
 - Use `implement-prd-stories` to add or update tests as part of each unblocked story.
-- Use `review-pull-request` and `check-production-readiness` to verify the agreed gates before merge/release.
+- Use `check-production-readiness` to verify the agreed gates before initial submission; use `review-pull-request` after the PR/MR exists.
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/test-strategies/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write supporting findings and review notes under `docs/test-strategies/` or another user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

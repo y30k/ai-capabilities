@@ -1,7 +1,7 @@
 ---
 name: design-polished-web-ui
 description: |
-  Design, implement, and iterate polished responsive web UI/UX using project design artifacts, screenshots or Figma style exports, existing components, premium inspiration, and visual/accessibility validation. Use when the user asks to build or improve a web interface, dashboard, component, screen, flow, design system, DESIGN.md/styles.json, screenshot match, UI polish pass, responsive layout, visual regression workflow, or concise UI copy. Applies to web stacks such as React, Next.js, Vue, Svelte, Astro, Tailwind, ShadCN/Radix, CSS modules, and custom component systems.
+  Design, implement, audit, and visually iterate polished, accessible, responsive web interfaces using current user direction, project design artifacts, screenshots or Figma exports, existing components and tokens, and breakpoint validation. Use when the user asks to build or improve a web interface, dashboard, component, screen, flow, design system, DESIGN.md or styles.json, screenshot match, UI polish pass, responsive layout, visual regression workflow, accessibility polish, or concise UI copy in React, Next.js, Vue, Svelte, Astro, or another web stack.
 ---
 
 # Design Polished Web UI
@@ -11,18 +11,20 @@ Use this skill to turn web UI work into a repeatable design-system-driven loop: 
 ## Boundary
 
 - Treat this as a coding skill when the user asks to implement UI. If the user only asks for planning, create design artifacts or recommendations and stop.
-- Ask before adding dependencies, replacing the component library, introducing a new design system, or committing third-party reference screenshots.
+- Ask before adding dependencies, replacing the component library, introducing a new design system, committing third-party reference screenshots, or staging a submission candidate unless staging was already requested.
 - Use external inspiration only for principles. Do not clone designs, bypass license restrictions, or let external references override project-specific direction.
 
 ## Source Order
 
 Prioritize UI decisions in this order:
 
-1. `DESIGN.md` and `styles.json`/`Styles.json`.
-2. Provided screenshots, Figma exports, layout images, and user instructions.
-3. Existing app design system, theme tokens, CSS variables, and reusable components.
-4. Existing product UI patterns in nearby screens.
-5. External premium UI inspiration translated into the product language.
+1. Current user instructions and acceptance criteria.
+2. User-provided screenshots, Figma exports, and layout references.
+3. Existing `DESIGN.md`, `styles.json`/`Styles.json`, and equivalent design artifacts.
+4. Existing components, theme tokens, CSS variables, and nearby product patterns.
+5. External inspiration translated into the product language.
+
+Explicit current user direction overrides stale artifacts; ask when sources conflict materially.
 
 ## Runbook
 
@@ -34,7 +36,7 @@ Prioritize UI decisions in this order:
 2. **Create or refresh design artifacts when needed**
    - Read `references/design-artifacts.md` before creating/updating `DESIGN.md`, `styles.json`, or `AGENTS.md`.
    - Derive tokens from provided design sources and existing code before inventing values.
-   - If no design direction exists, default to Inter, Lucide or Phosphor icons, Tailwind neutral palette, modern minimal spacing, restrained borders/shadows, and consistent reusable components.
+   - If no design direction exists, preserve installed fonts, icons, components, and palette. Use conservative system-font, neutral, low-decoration defaults only for unspecified choices; ask before adding a font, icon package, CSS framework, or design-system dependency.
 
 3. **Research inspiration deliberately**
    - Read `references/visual-iteration.md` when using Mobbin, Dribbble, Pinterest, Figma, product screenshots, or browser research.
@@ -43,7 +45,7 @@ Prioritize UI decisions in this order:
 
 4. **Implement through the existing system**
    - Use existing components and tokens first; add or extend reusable components when a pattern repeats.
-   - Prefer ShadCN/Radix/Coss UI-style primitives only when already present or explicitly approved.
+   - Prefer the project's existing primitives. Add shadcn/ui or Radix primitives only when already present or explicitly approved.
    - Implement mobile-first responsive behavior for phone, tablet, and desktop.
    - Include real UI states: loading, empty, error, disabled, focus, hover/pressed, long content, and narrow screens when relevant.
    - Keep language minimal: short headings, one-sentence descriptions, and one- or two-word button labels when possible.
@@ -56,11 +58,13 @@ Prioritize UI decisions in this order:
    - Run the app or component workshop and capture at least mobile, tablet, and desktop views when tooling allows.
    - Compare against provided screenshots by overlay/diff when possible; otherwise critique against the source order and design checklist.
    - Run one to three refinement passes, fixing hierarchy, spacing, alignment, copy, component states, and responsive issues before broad refactors.
-   - Optionally run the bundled advisory audit: `scripts/ui_static_audit.py --root . <ui-paths>`.
+   - Optionally run the bundled advisory audit: `scripts/ui_static_audit.py --root . <ui-paths>`. When design sources use non-default paths, pass `--design-guidance PATH` and/or `--design-tokens PATH`; use `--skip-artifact-checks` only after explicit project-level review.
+   - When modifying the audit itself, run `python3 -m unittest discover -s tests -p 'test_ui_static_audit.py'` from this skill directory; the regression suite is `tests/test_ui_static_audit.py`.
 
 7. **Validate and report**
    - Run relevant lint, typecheck, test, build, accessibility, and visual-regression commands.
    - Summarize design sources, files changed, reusable tokens/components introduced, viewports checked, validation results, and any visual gaps.
+   - Before initial PR/MR submission, obtain staging authorization unless already granted; snapshot cached/unstaged diffs, stage only the approved UI hunks, verify `git diff --cached --check` and candidate isolation, then hand the exact staged UI candidate to `check-production-readiness` and later `submit-change-request`. Without staging authorization, return the exact staging plan instead.
 
 ## Tooling Setup
 
@@ -68,4 +72,4 @@ Read `references/tooling.md` when the user asks for infrastructure, CI gates, vi
 
 ## Documentation Output
 
-When writing durable notes, inspiration summaries, UI audits, screenshots indexes, or implementation reports, write them under the repository-root `docs/` directory, preferably `docs/design-polished-web-ui/`. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write durable inspiration notes, UI audits, screenshot indexes, and implementation reports under `docs/design-polished-web-ui/` or another user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

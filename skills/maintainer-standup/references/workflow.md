@@ -2,6 +2,8 @@
 
 ## 1. Gather Context
 
+Confirm the repository and requested lookback window. If no window or stale threshold is supplied, choose and state them in the briefing rather than silently assuming them.
+
 Use available tools only:
 
 - `git status --short`, current branch, recent commits.
@@ -9,7 +11,7 @@ Use available tools only:
 - Open issues, new comments, stale or high-priority items.
 - Local maintainer notes if the project has them.
 
-If `gh` or network access is unavailable, report the limitation and summarize local git state.
+If `gh`, authentication, or network access is unavailable, report the limitation and summarize local git state. Distinguish `not checked` from `checked and none found`, and include the observation time for remote status.
 
 ## 2. Synthesize
 

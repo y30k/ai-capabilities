@@ -1,15 +1,17 @@
 ---
 name: release
 description: |
-  Prepare and cut a software release with gated validation: parse release intent, check repository state, run smoke tests, detect stack/version files, bump versions, draft changelog, request approval, commit/tag/create release, and handle optional package distribution. Use when the user asks to release, cut a release, ship, tag, publish, or prepare changelog and release notes.
+  Prepare or execute software releases with release-mechanics-specific validation and action-specific approval gates. Use when the user asks to plan or cut a versioned release, hotfix, prerelease, tag, hosted release, changelog or release notes, or package publication. Discover repository conventions, verify version and tag uniqueness, and require separate authorization before commits, pushes, hosted releases, or registry publishing.
 ---
 
 # Release
 
-Use this skill for release preparation and execution. Releases can affect users and external systems, so preserve approval gates.
+## Boundary
 
-Read `references/workflow.md` before changing versions, tags, branches, or published artifacts. After the release or deployment completes, use `observe-release` to verify rollout health and capture follow-up work.
+Treat release planning and drafting as read-only. Approval of a version or release notes does not authorize file edits, commits, tags, pushes, hosted releases, or package publication. Verify the release source already passed pre-submission production readiness and either completed its PR/MR review, remediation, integration, and required CI/CD or followed an explicitly authorized fast-track path; do not rerun a separate full production-readiness phase. Read `references/workflow.md`, present an action manifest, and perform only the separately approved actions. Never overwrite an existing tag, force-push, or blindly retry an ambiguous publish.
+
+After the release or deployment completes, use `observe-release` to verify rollout health and capture follow-up work.
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/release/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write durable release plans and reports under `docs/release/` or a user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

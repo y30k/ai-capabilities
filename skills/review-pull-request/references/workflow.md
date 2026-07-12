@@ -3,7 +3,7 @@
 ## Table of Contents
 
 1. [Fetch Context](#1-fetch-context)
-2. [Select Mode and Output Target](#2-select-mode-and-output-target)
+2. [Select Review Depth and Actions](#2-select-review-depth-and-actions)
 3. [Review Lanes](#3-review-lanes)
 4. [Validation Mode](#4-validation-mode)
 5. [Synthesize Findings](#5-synthesize-findings)
@@ -13,7 +13,7 @@
 
 ## 1. Fetch Context
 
-- Identify PR/MR number, URL, or branch. If no PR/MR exists yet, hand off to `submit-change-request` first.
+- Identify PR/MR number, URL, or branch. If no PR/MR exists yet, hand the staged candidate to `check-production-readiness`, then `submit-change-request`.
 - Read title, body, linked issues, changed files, diff, checks, comments, review threads, and project rules.
 - Check current review state and whether comments have already been posted by this agent to avoid duplicates.
 - Understand explicit scope and non-goals before flagging missing features.
@@ -24,19 +24,27 @@ Useful GitHub CLI context commands:
 gh pr view "$PR" --json number,title,url,headRefName,baseRefName,author,isDraft,mergeStateStatus,reviewDecision,body,comments,reviews,files,statusCheckRollup
 ```
 
-Use equivalent GitLab/Jira/Bitbucket/provider tools when GitHub is not the PR host.
+Use equivalent GitLab, Bitbucket, Azure DevOps, or other code-review-provider tools when GitHub is not the host.
 
-## 2. Select Mode and Output Target
+## 2. Select Review Depth and Actions
 
-| Mode | Use when | Lanes |
+Choose one review depth:
+
+| Depth | Use when | Lanes |
 | --- | --- | --- |
 | smart | default | scope + risk classification + selected lanes |
-| comprehensive | user asks full/deep review | all lanes |
+| comprehensive | user asks for full or deep review | all lanes |
 | maintainer | merge decision needed | direction, scope, user impact, review posture |
 | validation | prove behavior changed correctly | base vs feature checks |
-| publish-review-comments | default output behavior when PR/MR posting is available | synthesize + post comment/review |
-| fix-review-findings | user wants fixes from this review run | implement high-confidence findings without required thread replies |
-| address existing review comments | user wants reviewer threads addressed, replied to, committed, and pushed | hand off to `address-pr-review-comments` |
+
+Choose actions separately:
+
+| Action | Use when |
+| --- | --- |
+| return or draft findings | user requests read-only, draft, or validation-only output |
+| publish review | a direct review request identifies the PR/MR and publication is not excluded |
+| fix current-run findings | user explicitly requests high-confidence fixes from this review run |
+| address existing GitHub threads | hand off to `address-pr-review-comments` to process unresolved threads, post traceable replies, push fixes, and resolve fully addressed feedback |
 
 Output target default:
 
@@ -44,7 +52,9 @@ Output target default:
 2. Fall back to the agent response when provider access, credentials, line mapping, repository policy, or user instructions prevent posting.
 3. If posting fails, preserve the exact review body in the final response and include the failure reason.
 
-Use a top-level review comment by default. Use inline comments only when line-level mapping is reliable and there are few focused findings. Use formal approve/request-changes only when the user asks for a maintainer decision or repository convention requires it.
+Treat a direct request to review an identified PR/MR as authorization for one coherent review publication unless the user requests read-only, draft, or validation-only output. Never infer authorization to approve, request changes formally, edit code, or post multiple partial reviews from credentials alone.
+
+Use a top-level review comment by default. Use inline comments only when line-level mapping is reliable and there are few focused findings. Use formal approve/request-changes only when the user explicitly authorizes that formal decision; repository convention may guide the proposed action but does not authorize it.
 
 ## 3. Review Lanes
 
@@ -118,8 +128,8 @@ Prepare one review body with this structure:
 Posting rules:
 
 - Prefer `gh pr review <pr> --comment --body-file <file>` for a top-level GitHub review comment.
-- Use `--request-changes` only for clear blocking findings when operating in maintainer-decision mode or when the user asked for a merge recommendation.
-- Use `--approve` only when explicitly asked for a maintainer decision and no blocking findings remain.
+- Use `--request-changes` only when the user explicitly authorizes submitting a formal changes-requested review and clear blocking findings remain. Maintainer-decision mode or a merge recommendation alone produces a comment/recommendation, not authorization for this mutation.
+- Use `--approve` only when the user explicitly authorizes submitting a formal approval and no blocking findings remain.
 - For GitLab/other providers, use the provider CLI/API equivalent for a merge request note/review.
 - Do not post duplicate comments. If an equivalent review body was already posted, update locally and report instead of spamming.
 - Do not publish secrets, private logs, or sensitive vulnerability details; summarize safely and use the repository's private security process when appropriate.
@@ -136,8 +146,8 @@ If asked to fix findings from this review run:
 
 - Implement only high-confidence, in-scope fixes.
 - Do not rewrite the PR unnecessarily.
-- Rerun validation and summarize remaining findings.
-- Use `submit-change-request` to commit/push/monitor the update when needed.
+- Rerun focused validation and summarize remaining findings.
+- Use `submit-change-request` to commit, push, and monitor the update; passing or explicitly waived updated required CI/CD completes readiness confirmation without a separate final production-readiness phase.
 
 If asked to address existing GitHub review comments or reply to reviewer threads before pushing, use `address-pr-review-comments` instead.
 
@@ -150,4 +160,4 @@ Return a concise final response with:
 - Review decision and finding counts by severity.
 - Validation commands and results.
 - If posting failed, the full review body and the failure reason.
-- Suggested next skill: `address-pr-review-comments`, `submit-change-request`, `check-production-readiness`, or no action.
+- Suggested next skill: `address-pr-review-comments`, `submit-change-request`, or no action.

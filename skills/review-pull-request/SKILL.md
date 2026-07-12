@@ -1,36 +1,27 @@
 ---
 name: review-pull-request
 description: |
-  Review pull requests/merge requests with adaptive, comprehensive, maintainer-decision, validation, and optional safe-fix paths. Use when the user asks to review a PR/MR, validate a PR/MR, check a pull request, synthesize review findings, decide whether a PR is ready to merge, or leave review feedback. By default, when a PR/MR target and credentials are available, publish clear review comments on the PR/MR itself with reasoning, impact, and requested changes; fall back to returning the review in the agent response when direct commenting is unavailable. If the user asks to address existing reviewer comments, reply on PR threads, commit, and push fixes, use address-pr-review-comments instead.
+  Review pull requests and merge requests for correctness, edge cases, tests, maintainability, compatibility, security, performance, and delivery risk; validate claimed behavior; synthesize evidence-backed findings; recommend merge posture when requested; and publish review feedback when authorized and tooling permits. Use for first-pass, comprehensive, maintainer, validation-focused, or merge-readiness review of a PR/MR. Treat a direct request to review an identified PR/MR as authorization to publish one review unless the user requests read-only or draft output. For remediation of existing GitHub review threads, use address-pr-review-comments instead.
 ---
 
 # Review Pull Request
 
-Use this skill for PR/MR review and validation. It consolidates smart, comprehensive, maintainer, validation-focused, review-comment publishing, and safe fix workflows.
+## Select Review Depth and Actions
 
-## Mode Selection
-
-Read `references/workflow.md`, then choose:
-
-- **smart**: adaptive review; only run lanes warranted by risk.
-- **comprehensive**: run all review lanes and synthesize findings.
-- **maintainer**: review against project direction and make approve/request-changes/comment recommendation.
-- **validation**: compare main/base vs feature behavior, including tests or reproduction.
-- **publish-review-comments**: default output behavior; post clear findings to the PR/MR itself when possible, otherwise return them in the agent response.
-- **fix-review-findings**: implement safe fixes from this review run if requested; use `address-pr-review-comments` when existing GitHub reviewer threads need replies, commits, and push updates.
+Read `references/workflow.md`. Select one review depth: **smart** (default), **comprehensive**, **maintainer**, or **validation**. Separately select output and mutation behavior: return or draft findings, publish authorized feedback, or implement explicitly requested high-confidence findings from this review run.
 
 ## Review Output Default
 
-Default to publishing review feedback on the PR/MR itself when a PR/MR is identified and credentials/tooling allow it. Prefer a top-level review comment with clear reasoning, impact, and requested changes; add inline comments only when provider tooling supports them and the line mapping is reliable. If direct commenting fails, is unavailable, or would create noisy duplicates, return the same review content in the agent response and say why it was not posted.
+Treat a direct request to review an identified PR/MR as authorization to publish one review when credentials and tooling allow, unless the user requests read-only, draft, or validation-only output. Prefer one top-level review comment with clear reasoning, impact, and requested changes; add inline comments only when provider tooling supports them and line mapping is reliable. Never publish duplicate or partial review content. If direct commenting fails, is unavailable, or would create noise, return the same review content in the agent response and state why it was not posted.
 
-Use a normal comment review by default. Use formal approve/request-changes only when the user asks for a maintainer decision or the repository workflow clearly expects that action.
+Use a normal comment review by default. Use formal approve/request-changes only when the user explicitly authorizes that formal decision; repository convention may inform the recommendation but never substitutes for authorization.
 
 ## Handoff
 
-Use `submit-change-request` first when changes are still local, no PR/MR exists, or PR-connected CI/CD needs to be created or monitored before review.
+When changes are still local and no PR/MR exists, use `check-production-readiness` and then `submit-change-request` before review. Use `submit-change-request` directly when an existing PR/MR only needs CI/CD monitoring.
 
 Use `address-pr-review-comments` after reviewers request changes or leave threaded feedback that should be answered on GitHub before pushing a fix commit.
 
 ## Documentation Output
 
-When writing plans, reports, PRDs, briefs, findings, story tracking, scratch notes, or other generated documentation, write them under the repository-root `docs/` directory, preferably `docs/review-pull-request/...` or the specific `docs/` path named in the workflow. Do not use `.agents/`, `.pi/`, `.codex/`, `.claude/`, or other agent-specific directories for generated documentation.
+Write durable review notes under `docs/review-pull-request/` or a user-specified path under `docs/`. Never store generated documentation in agent-state directories such as `.agents/`, `.pi/`, `.codex/`, or `.claude/`.

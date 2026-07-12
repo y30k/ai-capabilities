@@ -1,5 +1,15 @@
 # Delivery Board Management Workflow
 
+## Table of Contents
+
+1. [Confirm Scope](#1-confirm-scope)
+2. [Discover Board Schema](#2-discover-board-schema)
+3. [Normalize Items](#3-normalize-items)
+4. [Audit the Board](#4-audit-the-board)
+5. [Prioritize Next Work](#5-prioritize-next-work)
+6. [Apply Updates Safely](#6-apply-updates-safely)
+7. [Report](#7-report)
+
 ## 1. Confirm Scope
 
 - Identify the board/project URL, Jira board/project, repo set, milestone/sprint, labels/components, or saved filter.
@@ -74,7 +84,7 @@ Safe updates include:
 
 - status corrections based on closed/open relationships
 - adding missing tracker-native links
-- moving duplicates to canonical items
+- updating board fields or links to reflect a user-approved canonical item; use `manage-github-issues` for issue-level duplicate comments or closure
 - adding missing PRD/design/test links to item bodies
 - setting repo/system/type/priority fields
 - adding comments that explain decisions or ask owners for missing info

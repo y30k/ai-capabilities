@@ -1,4 +1,4 @@
 interface:
   display_name: "Implement PRD Stories"
-  short_description: "Implement and advance PRD stories"
-  default_prompt: "Use $implement-prd-stories to implement the next approved PRD story, advance statuses, and refresh blocked-story readiness."
+  short_description: "Implement, stage, and advance PRD stories"
+  default_prompt: "Use $implement-prd-stories to implement the next unblocked story only in the current repo, validate and stage it, apply the tracker's real completion status, and move dependents to Ready across repositories only after Done is genuinely satisfied."

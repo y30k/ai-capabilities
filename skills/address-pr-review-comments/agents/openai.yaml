@@ -1,4 +1,4 @@
 interface:
   display_name: "Address PR Review Comments"
-  short_description: "Fix PR threads with SHA replies"
-  default_prompt: "Use $address-pr-review-comments to resolve review threads, validate fixes, reply with commit short SHAs when possible, then push the update."
+  short_description: "Address and resolve unresolved PR feedback"
+  default_prompt: "Use $address-pr-review-comments to process unresolved PR threads end-to-end: validate, stage, commit, reply, push normally, resolve addressed threads, then paginate every thread and repeat until the exact current PR head has zero unresolved threads or an explicit blocker is reported."

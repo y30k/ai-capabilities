@@ -1,5 +1,6 @@
 # Local coding-agent state and project-local development skills
 .pi/
+.pi-subagents
 
 # OS/editor noise
 .DS_Store

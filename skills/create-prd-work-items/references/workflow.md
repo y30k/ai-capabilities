@@ -1,5 +1,16 @@
 # PRD Work Item Creation Workflow
 
+## Table of Contents
+
+1. [Confirm Inputs](#1-confirm-inputs)
+2. [Discover Tracker Capabilities](#2-discover-tracker-capabilities)
+3. [Extract Work from the PRD](#3-extract-work-from-the-prd)
+4. [Dedupe and Enrich Existing Work](#4-dedupe-and-enrich-existing-work)
+5. [Draft Item Records](#5-draft-item-records)
+6. [Build Dependency Graph and Priority](#6-build-dependency-graph-and-priority)
+7. [Mutate the Tracker Safely](#7-mutate-the-tracker-safely)
+8. [Report](#8-report)
+
 ## 1. Confirm Inputs
 
 Collect:
@@ -8,7 +19,7 @@ Collect:
 - Optional technical design and test strategy paths.
 - Tracker target: GitHub Project URL, org/user project number, Jira board/project, or explicit repo issue tracker.
 - Target organization and repositories, including cross-repo dependencies.
-- Permission mode: `draft-only`, `ask-before-posting`, or `authorized-to-post`.
+- Permission mode: `draft-only`, `ask-before-mutation`, or `authorized-to-mutate`.
 
 If the PRD is not approved or still has scope-changing open questions, stop and ask whether to proceed with draft-only planning.
 
@@ -95,7 +106,7 @@ Use priority/order fields for scheduling, but relationship links are the source 
 
 ## 7. Mutate the Tracker Safely
 
-Before posting, show a concise creation/update/link plan and wait unless already authorized.
+Before mutating the tracker, show a concise creation, update, and relationship-link plan and wait unless the user already authorized those mutations.
 
 When mutating:
 
@@ -112,11 +123,11 @@ If a relationship mutation fails, do not silently fall back to labels/body text.
 Return:
 
 ```markdown
-## PRD Work Items Created/Updated
+## PRD Work Item Plan / Mutation Report
 
 **Source**: {PRD/design}
 **Tracker**: {project/board}
-**Mode**: draft-only | posted | partially posted
+**Mode**: draft-only | mutated | partially mutated
 
 | Item | Repo/System | Type | Action | Blocked By | Blocks | Priority | Next Step |
 | --- | --- | --- | --- | --- | --- | --- | --- |

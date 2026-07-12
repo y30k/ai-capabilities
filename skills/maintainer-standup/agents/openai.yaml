@@ -1,4 +1,4 @@
 interface:
   display_name: "Maintainer Standup"
-  short_description: "Maintainer morning briefing"
+  short_description: "Prioritized repository health briefing"
   default_prompt: "Use $maintainer-standup to prepare a concise maintainer briefing for this repository."

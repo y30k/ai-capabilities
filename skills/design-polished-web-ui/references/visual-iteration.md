@@ -17,7 +17,7 @@ Use this reference while implementing or polishing a web UI, especially when scr
    - `minimal professional app UI`
 2. Prefer premium references from Mobbin, Dribbble, Pinterest, Figma community files, best-in-class products in the same category, or user-provided screenshots.
 3. Do not copy a design directly. Extract principles only: hierarchy, grouping, spacing, density, navigation, card structure, empty states, sheet/modal behavior, responsive behavior, and micro-interactions.
-4. Do not let external inspiration override `DESIGN.md`, style JSON, screenshots, existing components, or approved theme tokens.
+4. Do not let external inspiration override current user direction, acceptance references, `DESIGN.md`, style JSON, existing components, or approved theme tokens.
 5. Record sources reviewed and the principles applied. If web access is unavailable, say so and ask for screenshots/links instead of inventing URLs.
 
 ## Implementation Loop
@@ -77,3 +77,4 @@ Summarize final UI work with:
 - Screenshots captured or visual checks performed by viewport.
 - Validation commands run and results.
 - Known follow-up if visual parity could not be fully verified.
+- Authorized, index-safe staging evidence and production-readiness handoff for the exact candidate before initial PR/MR submission.
